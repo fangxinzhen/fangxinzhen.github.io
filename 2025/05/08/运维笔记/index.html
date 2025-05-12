@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="老实说我认为运维是个持久化工作，体现在知识面需要广，服务需要好，觉悟要高。还有就是日常工作如果碰到问题及怎么解决的过程最好记录下来因为这是你的真实经验，网上是学不到的。人教人是教不会的，事情一教就会！以下就是我的真实运维过程的 “随心摘记 “，仅供参考！嘿嘿！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="运维笔记">
+<meta property="og:url" content="http://example.com/2025/05/08/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Fangxz&#39;Blogs">
+<meta property="og:description" content="老实说我认为运维是个持久化工作，体现在知识面需要广，服务需要好，觉悟要高。还有就是日常工作如果碰到问题及怎么解决的过程最好记录下来因为这是你的真实经验，网上是学不到的。人教人是教不会的，事情一教就会！以下就是我的真实运维过程的 “随心摘记 “，仅供参考！嘿嘿！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170248.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170252.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170258.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170301.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170333.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170703.jpg">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171845.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171848.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171922.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171933.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171946.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171949.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174329.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174432.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174505.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174553.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174623.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174642.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174719.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174723.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174728.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174747.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174804.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174842.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174850.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174857.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174906.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174912.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172322.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172427.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172441.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172444.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172448.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172451.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172454.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172813.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172831.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172847.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172853.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172923.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172936.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173010.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173021.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173104.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173133.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173155.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173158.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173209.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173211.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173222.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173235.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173305.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173320.png">
+<meta property="og:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173503.png">
+<meta property="article:published_time" content="2025-05-08T08:46:21.000Z">
+<meta property="article:modified_time" content="2025-05-08T09:50:45.574Z">
+<meta property="article:author" content="Fangxz">
+<meta property="article:tag" content="方信镇, 个人博客, 记录,生活,学习,笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170248.png">
+
+
+<link rel="canonical" href="http://example.com/2025/05/08/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2025/05/08/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0/","path":"2025/05/08/运维笔记/","title":"运维笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>运维笔记 | Fangxz'Blogs</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js" defer></script>
+  <script async src="https://hm.baidu.com/hm.js?475b386414974d18a03f7b3e29226e33"></script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"0H5NvXonej8W1o8nQJgJeF0D-gzGzoHsz","app_key":"YJ6l8fYyuouqvj1neakqXFZT","server_url":"https://0h5nvxon.lc-cn-n1-shared.com","security":true}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Fangxz'Blogs</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录美好生活与学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-运维"><a href="/categories/%E8%BF%90%E7%BB%B4/" rel="section"><i class="fa fa-cogs fa-fw"></i>运维</a></li><li class="menu-item menu-item-虚拟化"><a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" rel="section"><i class="fa fa-clone fa-fw"></i>虚拟化</a></li><li class="menu-item menu-item-windows|linux"><a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="section"><i class="fa fa-linux fa-fw"></i>Windows|Linux</a></li><li class="menu-item menu-item-系统|服务"><a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" rel="section"><i class="fa fa-server fa-fw"></i>系统|服务</a></li><li class="menu-item menu-item-趣闻"><a href="/categories/%E8%B6%A3%E9%97%BB/" rel="section"><i class="fa fa-newspaper fa-fw"></i>趣闻</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">常用工具集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E7%A7%80%E5%85%B8%E8%97%8F%E7%BD%91%E7%AB%99%E9%9B%86"><span class="nav-number">1.1.</span> <span class="nav-text">优秀典藏网站集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EVE-NG"><span class="nav-number">1.2.</span> <span class="nav-text">EVE-NG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Notepad"><span class="nav-number">1.3.</span> <span class="nav-text">Notepad++</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.3.1.</span> <span class="nav-text">插件介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NppFTP"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">NppFTP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Compare"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">Compare</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Explorer"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">Explorer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NppExport"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">NppExport</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iVentoy%E5%B7%A5%E5%85%B7"><span class="nav-number">1.4.</span> <span class="nav-text">iVentoy 工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#iVentoy%E6%A6%82%E8%BF%B0"><span class="nav-number">1.4.1.</span> <span class="nav-text">iVentoy 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ventoy%E6%A6%82%E8%BF%B0"><span class="nav-number">1.4.2.</span> <span class="nav-text">Ventoy 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iVentoy-%E8%87%AA%E5%8A%A8%E5%AE%89%E8%A3%85%EF%BC%88%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88%EF%BC%89"><span class="nav-number">1.4.3.</span> <span class="nav-text">iVentoy 自动安装（无人值守）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iVentoy-%E9%85%8D%E5%90%88%E7%AC%AC%E4%B8%89%E6%96%B9-DHCP-Server-%E8%AF%B4%E6%98%8E"><span class="nav-number">1.4.4.</span> <span class="nav-text">iVentoy 配合第三方 DHCP Server 说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E6%BC%94%E7%BB%83"><span class="nav-number">1.4.5.</span> <span class="nav-text">实战演练</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87"><span class="nav-number">2.</span> <span class="nav-text">疑难杂症</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E9%9A%8F%E8%AE%B0"><span class="nav-number">3.</span> <span class="nav-text">工作随记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%B7%E5%BA%B7%E5%A8%81%E8%A7%86%E7%9B%91%E6%8E%A7"><span class="nav-number">3.1.</span> <span class="nav-text">海康威视监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87%EF%BC%9A"><span class="nav-number">3.1.1.</span> <span class="nav-text">基础知识篇：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E9%94%99%E7%AF%87"><span class="nav-number">3.1.2.</span> <span class="nav-text">排错篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%93%E4%BD%BF%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE%E6%91%84%E5%83%8F%E5%A4%B4%E7%94%BB%E9%9D%A2%E6%97%B6%E5%87%BA%E7%8E%B0%E5%A4%B1%E8%B4%A5"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">当使用浏览器访问摄像头画面时出现失败</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IDC%E7%9B%B8%E5%85%B3"><span class="nav-number">3.2.</span> <span class="nav-text">IDC 相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%89%E7%BA%A4%E9%85%8D%E7%BA%BF%E6%9E%B6"><span class="nav-number">3.2.1.</span> <span class="nav-text">光纤配线架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%89%E7%BA%A4%E8%B7%B3%E7%BA%BF%E5%8C%BA%E5%88%AB"><span class="nav-number">3.2.2.</span> <span class="nav-text">光纤跳线区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PON%E3%80%81EPON%E3%80%81GPON%E6%9E%B6%E6%9E%84%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E7%9F%A5%E8%AF%86%EF%BC%88%E5%85%89%E7%BA%A4%E5%85%A5%E6%88%B7%EF%BC%89"><span class="nav-number">3.2.3.</span> <span class="nav-text">PON、EPON、GPON 架构网络设备知识（光纤入户）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.2.4.</span> <span class="nav-text">交换机介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%A4%87%E6%A1%88"><span class="nav-number">3.3.</span> <span class="nav-text">网站备案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E6%A1%88%E6%A6%82%E8%BF%B0"><span class="nav-number">3.3.1.</span> <span class="nav-text">备案概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%87%E6%A1%88%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="nav-number">3.3.1.1.</span> <span class="nav-text">备案的目的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D"><span class="nav-number">3.3.1.2.</span> <span class="nav-text">域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%87%E6%A1%88%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.1.3.</span> <span class="nav-text">备案类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E5%A4%87%E6%A1%88%E4%BF%A1%E6%81%AF%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.1.4.</span> <span class="nav-text">增加备案信息的类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%A4%87%E6%A1%88%E4%BF%A1%E6%81%AF%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.1.5.</span> <span class="nav-text">删除备案信息的类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%A4%87%E6%A1%88%E4%BF%A1%E6%81%AF%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.1.6.</span> <span class="nav-text">修改备案信息的类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E6%A1%88%E9%9C%80%E8%A6%81%E5%87%86%E5%A4%87%E4%BB%80%E4%B9%88%E6%9D%90%E6%96%99"><span class="nav-number">3.3.2.</span> <span class="nav-text">备案需要准备什么材料</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%A1%88"><span class="nav-number">3.3.2.1.</span> <span class="nav-text">个人备案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E4%BD%8D%E5%A4%87%E6%A1%88"><span class="nav-number">3.3.2.2.</span> <span class="nav-text">单位备案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E5%85%A5%E5%A4%87%E6%A1%88"><span class="nav-number">3.3.2.3.</span> <span class="nav-text">接入备案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%B5%B7%E5%A4%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8D%E9%9C%80%E8%A6%81%E5%A4%87%E6%A1%88"><span class="nav-number">3.3.2.4.</span> <span class="nav-text">使用海外服务器不需要备案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A2%83%E5%A4%96%E4%BC%81%E4%B8%9A%E5%A6%82%E4%BD%95%E5%A4%87%E6%A1%88"><span class="nav-number">3.3.2.5.</span> <span class="nav-text">境外企业如何备案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%87%E6%A1%88%E4%B8%93%E6%9C%89%E5%90%8D%E8%AF%8D"><span class="nav-number">3.3.2.6.</span> <span class="nav-text">备案专有名词</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E3%80%81%E5%9F%9F%E5%90%8D%E6%95%B0%E9%87%8F%E9%99%90%E5%88%B6"><span class="nav-number">3.3.3.</span> <span class="nav-text">网站、域名数量限制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%A4%87%E6%A1%88%E4%BC%9A%E6%9C%89%E4%BB%80%E4%B9%88%E5%BD%B1%E5%93%8D"><span class="nav-number">3.3.3.1.</span> <span class="nav-text">不备案会有什么影响</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Fangxz"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Fangxz</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fangxinzhen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fangxinzhen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xinzhen_fang@126.com" title="E-Mail → mailto:xinzhen_fang@126.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/05/08/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Fangxz">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fangxz'Blogs">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="运维笔记 | Fangxz'Blogs">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          运维笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-08 16:46:21 / 修改时间：17:50:45" itemprop="dateCreated datePublished" datetime="2025-05-08T16:46:21+08:00">2025-05-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a>
+        </span>
+    </span>
+
+  
+    <span id="/2025/05/08/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0/" class="post-meta-item leancloud_visitors" data-flag-title="运维笔记" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="运维笔记" href="/2025/05/08/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0/#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::3aaab13b6cc7d05285c49e317838d88c" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>9.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>36 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>老实说我认为运维是个持久化工作，体现在知识面需要广，服务需要好，觉悟要高。还有就是日常工作如果碰到问题及怎么解决的过程最好记录下来因为这是你的真实经验，网上是学不到的。<br>人教人是教不会的，事情一教就会！<br>以下就是我的真实运维过程的 “随心摘记 “，仅供参考！嘿嘿！</p>
+<span id="more"></span>
+<h1 id="常用工具集"><a href="#常用工具集" class="headerlink" title="常用工具集"></a>常用工具集</h1><h2 id="优秀典藏网站集"><a href="#优秀典藏网站集" class="headerlink" title="优秀典藏网站集"></a>优秀典藏网站集</h2><p><a target="_blank" rel="noopener" href="http://www.cxy521.com/">http://www.cxy521.com/</a><br><a target="_blank" rel="noopener" href="https://rufus.ie/zh/">https://rufus.ie/zh/</a><br><a target="_blank" rel="noopener" href="https://localsend.org/#/download">https://localsend.org/#/download</a><br><a target="_blank" rel="noopener" href="http://www.wofficebox.com/">http://www.wofficebox.com/</a><br>static.f7tk.com/index.html    网页图片批量下载插件  Fatkun<br><a target="_blank" rel="noopener" href="https://www.appinn.com/">https://www.appinn.com/</a>    万能软件工具网站<br><a target="_blank" rel="noopener" href="https://chat18.aichatos.xyz/#/chat/1709025371275">https://chat18.aichatos.xyz/#/chat/1709025371275</a>   chatgpt 网址<br><a target="_blank" rel="noopener" href="https://www.ventoy.net/cn/">https://www.ventoy.net/cn/</a>   ventoy Ventoy 是一个制作可启动 U 盘的开源工具。（精品）<br><a target="_blank" rel="noopener" href="https://wis.ruijie.com.cn/wmg/static/homepager/index.htm">https://wis.ruijie.com.cn/wmg/static/homepager/index.htm</a>  手机端 WiFi 测速工具（精品）<br><a target="_blank" rel="noopener" href="https://www.xshell.com/zh/free-for-home-school/">https://www.xshell.com/zh/free-for-home-school/</a>   xshell 官方免费的 xshell  和 xftp 工具下载地址<br><a target="_blank" rel="noopener" href="https://yank-note.com/zh-CN">https://yank-note.com/zh-CN</a>    一款强大可扩展的 Markdown 编辑器<br><a target="_blank" rel="noopener" href="https://opensource.com/">https://opensource.com/</a>  红帽前沿开源技术网站（精品）<br><a target="_blank" rel="noopener" href="https://opensource.com/alternatives?utm_source=intcta">https://opensource.com/alternatives?utm_source=intcta</a>   商业产品开源替代方案<br><a target="_blank" rel="noopener" href="https://opensource.com/downloads">https://opensource.com/downloads</a>   红帽前沿开源技术网站，国外级的原生技术，可免费下载文档（超级精品）<br><a target="_blank" rel="noopener" href="https://veracrypt.fr/en/Home.html">https://veracrypt.fr/en/Home.html</a>  （磁盘，分区）加密存储方案<br>。。。。。。</p>
+<h2 id="EVE-NG"><a href="#EVE-NG" class="headerlink" title="EVE-NG"></a>EVE-NG</h2><p>EVE-NG（Emulated Virtual Environment - Next Generation）是一款功能强大的网络仿真虚拟环境工具<br>官方：<a target="_blank" rel="noopener" href="https://www.eve-ng.net/">https://www.eve-ng.net/</a><br>官方下载链接：<a target="_blank" rel="noopener" href="https://customers.eve-ng.net/eve-ce-prod-6.2.0-4-full.iso">https://customers.eve-ng.net/eve-ce-prod-6.2.0-4-full.iso</a><br>百度网盘安装包和镜像下载地址：见 / 闪魔 /eve-ng，内含镜像密码（见 pdf 文件）<br>中文网：<a target="_blank" rel="noopener" href="https://eve-ng.cn/doku.php?id=%E9%A6%96%E9%A1%B5">https://eve-ng.cn/doku.php?id=%E9%A6%96%E9%A1%B5</a><br>如何上传镜像到 EVE-NG 中：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liuhuayeyu/article/details/124082469">https://blog.csdn.net/liuhuayeyu/article/details/124082469</a>  (精品)<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170248.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170252.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170258.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170301.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170333.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508170703.jpg" alt="Img"></p>
+<h2 id="Notepad"><a href="#Notepad" class="headerlink" title="Notepad++"></a>Notepad++</h2><p>工具安装包：百度网盘 &gt;  运维工具 &gt; 其他工具 &gt; Notepad++<br>插件安装包：百度网盘 &gt;  运维工具 &gt; 其他工具 &gt; plugins</p>
+<h3 id="插件介绍"><a href="#插件介绍" class="headerlink" title="插件介绍"></a>插件介绍</h3><h4 id="NppFTP"><a href="#NppFTP" class="headerlink" title="NppFTP"></a>NppFTP</h4><p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171845.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171848.png" alt="Img"></p>
+<h4 id="Compare"><a href="#Compare" class="headerlink" title="Compare"></a>Compare</h4><p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171922.png" alt="Img"></p>
+<h4 id="Explorer"><a href="#Explorer" class="headerlink" title="Explorer"></a>Explorer</h4><p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171933.png" alt="Img"></p>
+<h4 id="NppExport"><a href="#NppExport" class="headerlink" title="NppExport"></a>NppExport</h4><p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171946.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508171949.png" alt="Img"></p>
+<h2 id="iVentoy工具"><a href="#iVentoy工具" class="headerlink" title="iVentoy工具"></a>iVentoy 工具</h2><p>官方手册：<a target="_blank" rel="noopener" href="https://www.iventoy.com/cn/index.html">https://www.iventoy.com/cn/index.html</a></p>
+<h3 id="iVentoy概述"><a href="#iVentoy概述" class="headerlink" title="iVentoy概述"></a>iVentoy 概述</h3><p>简单来说，iVentoy 可以看成是一个增强版的 PXE 服务器。 使用 iVentoy 你可以通过网络同时给多台机器启动、安装操作系统。</p>
+<p>iVentoy 使用极其简单，无需复杂的配置，直接把 ISO 文件放到指定位置，客户机在启动时根据菜单选择要启动的 ISO 文件即可。<br>iVentoy 同时支持 x86 Legacy BIOS、IA32 UEFI、x86_64 UEFI 和 ARM64 UEFI 模式。<br>iVentoy 支持 110 多种常见类型的操作系统 （Windows/WinPE/Linux/VMware）</p>
+<h3 id="Ventoy概述"><a href="#Ventoy概述" class="headerlink" title="Ventoy概述"></a>Ventoy 概述</h3><p>Ventoy 工具，简单来说，Ventoy 是一个制作可启动 U 盘的开源工具。<br><a target="_blank" rel="noopener" href="https://www.ventoy.net/cn/">https://www.ventoy.net/cn/</a><br>（精品系统）</p>
+<ul>
+<li>iVentoy 服务端安装包（win）<br>略</li>
+<li>使用说明</li>
+</ul>
+<ol>
+<li>下载软件<br>根据系统版本下载 Windows 64 位、Windows 32 位或 Linux 64 位版本（不支持 Linux 32 位版本）。比如 iventoy-1.0.00-win64.zip<br>软件下载之后解压。注意：解压位置的全路径中不能有中文或空格！ 软件解压后的目录结构如下：<br>各个目录作用如下：<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174329.png" alt="Img"></li>
+<li>拷贝 ISO 文件<br>把 ISO 文件都拷贝到 iso 目录下，你可以在此目录下任意创建子目录来归类存放各种不同类型系统的 ISO 文件。 注意：目录名和 ISO 文件名中不能有中文或空格！</li>
+</ol>
+<p>这里说明一下，你不一定真的需要把 ISO 文件从别的位置拷贝到这个 iso 目录下，你也可以做软链接，比如:<br>在 Windows 系统中你可以使用 mklink 命令， 在 Linux 系统中你可以使用 ln -s 命令。</p>
+<p>mklink D:\iventoy-1.0.00\iso\ubuntu-22.04.2-desktop-amd64.iso  E:\download\ubuntu-22.04.2-desktop-amd64.iso </p>
+<p>ln -s /opt/download/ubuntu-22.04.2-desktop-amd64.iso  /home/panda/iventoy-1.0.00/iso/ubuntu-22.04.2-desktop-amd64.iso<br>3. 运行 iVentoy 软件<br>Windows 系统中直接双击运行 exe 文件即可。Linux 系统下在终端中执行 sudo bash iventoy.sh start 命令。</p>
+<ol start="4">
+<li>iVentoy 界面<br>iVentoy 的界面是基于 WEB 的，因此软件运行起来以后，需要打开浏览器访问 <a target="_blank" rel="noopener" href="http://127.0.0.1:26000/">http://127.0.0.1:26000</a> 来打开 iVentoy 的软件界面。<br>你也可以从另外一台电脑上，通过 <a target="_blank" rel="noopener" href="http://x.x.x.x:26000/">http://x.x.x.x:26000</a> 来访问软件界面，其中 x.x.x.x 是运行 iVentoy 的那台电脑的 IP 地址。<br>比如，运行 iVentoy 的服务器（Linux 系统）中没有图形界面环境，就可以这样通过另外一台电脑来访问。</li>
+</ol>
+<p>Windows 系统中打开软件之后，会自动打开浏览器，如果没有自动打开，则需要手动点击 打开链接 按钮。<br>注意：请使用新版本的 Google Chrome 或 FireFox 浏览器访问 iVentoy 界面，其他浏览器未做测试，不保证没有问题。</p>
+<ol start="5">
+<li>启动 PXE 服务<br>在 iVentoy 主界面上选择本机 IP 地址，设置好 IP 地址池，然后点击绿色的开始按钮即可。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174432.png" alt="Img"></li>
+<li>自动启动 PXE 服务<br>Windows 版本可以执行 iVentoy_64.exe -R , Linux 版本中可以执行 sudo bash iventoy.sh -R start<br>其中 -R 选项的意思是按照上一次运行时的参数自动启动 PXE 服务。 这样就不需要再手动点击绿色的开始按钮了。<br>当然前提是之前必须手动设置完参数，启动过一次。在此之后运行时设置的参数会被保存下来，才可以使用 -R 选项。</li>
+</ol>
+<h3 id="iVentoy-自动安装（无人值守）"><a href="#iVentoy-自动安装（无人值守）" class="headerlink" title="iVentoy 自动安装（无人值守）"></a>iVentoy 自动安装（无人值守）</h3><p>很多操作系统都提供了无人值守、自动安装部署的方案。你只需要提供一个脚本或者模板即可。<br>比如 Windows 中的 unattend XML、Redhat/CentOS 系列中的 Kickstart 脚本、SUSE 系列中的 autoYast XML、Debian 系列中的 preseed 脚本等等。<br>正常情况下，如果你想进行自动安装，你必须重新制作一个新的 ISO 文件，在里面放入一个自动安装的脚本才可以。<br>通过 iVentoy 你无需重新制作 ISO 文件，只需要简单地为一个 ISO 文件指定一个或者多个自动安装脚本即可。 当有多个自动安装脚本时，在启动时会弹出菜单来让你选择。 你还可以随时更新这些自动安装的脚本。<br>如：<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174505.png" alt="Img"></p>
+<ul>
+<li>支持的发行版 (更新中)<br>下面的示例脚本位于安装包内的 user/scripts/example 目录下。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174553.png" alt="Img"><br>注意，这里的示例脚本仅供参考，需要根据实际需要修改，尤其是里面磁盘分区设置的部分。否则会造成磁盘被误格式化、数据丢失等问题。</li>
+<li>软件配置<br>直接在 iVentoy 界面上选择对应的 ISO 文件，设置自动安装脚本路径即可。</li>
+<li>脚本变量扩展<br>在进行自动安装时，在安装脚本中有一些配置是无法固定写死的，必须根据实际环境进行调整。<br>最常见的就是对于安装盘的指定，比如我们在安装脚本中指定系统安装到 DISK0 或者 /dev/sda<br>但在有些机器上它对应的那个盘并不是我们想要的那个。 这样可能就把系统安装到错误的盘上了。<br>针对上述需求，iVentoy 在自动安装脚本中支持 变量扩展，变量使用 $$VT_XXX$$ 的形式，其中 VT_XXX 对应变量名。注意：1. 包含变量的自动安装脚本文件必须是 UTF-8 编码格式。2. 只支持下面表格中列出的变量，不支持自定义变量。2. 变量名两边必须各用 2 个 $ 符号包起来，即 $$VT_XXX$$ 的形式。3. Ventoy 会自动检测自动安装脚本内是否包含变量，对于不包含变量的脚本不会做扩展处理。4. 变量扩展是在副本中进行的，不会修改脚本源文件。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174623.png" alt="Img"><br>脚本示例：unattend.xml<br>脚本示例：kickstart.cfg<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174642.png" alt="Img"></li>
+</ul>
+<h3 id="iVentoy-配合第三方-DHCP-Server-说明"><a href="#iVentoy-配合第三方-DHCP-Server-说明" class="headerlink" title="iVentoy 配合第三方 DHCP Server 说明"></a>iVentoy 配合第三方 DHCP Server 说明</h3><ul>
+<li><ol>
+<li>背景说明<br>通过网络安装系统（PXE）流程的第一步就是客户端向服务端发送 DHCP 请求来分配一个 IP 地址。因此必须有一个 DHCP Server 的角色。<br>iVentoy 内部集成了一个 DHCP Server，简单场景下可以直接使用这个内部集成的 DHCP Server。但此时局域网内不能再有其他的 DHCP Server。<br>iVentoy 也可以不启用这个内部的 DHCP Server 而是和第三方 DHCP Server 配合工作。<br>注意：第三方 DHCP Server 必须支持 next-server 和 bootfile 这两个选项的配置。（必须配置）<br>如；华为 S7706 交换机做 DHCP SERVER 服务器，需要对所在开启了 DHCP 服务的 vlanif 或 IP pool 池中配置：</li>
+</ol>
+</li>
+</ul>
+<p> bootfile  优先选 iventoy_loader_16000_uefi  （兼容 bios 启动）<br> <img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174719.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174723.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174728.png" alt="Img"></p>
+<ul>
+<li><ol start="2">
+<li>启动文件<br>iVentoy 配合第三方 DHCP Server 工作时，自身不再提供 DHCP Server 的功能，而是只作为文件服务器的角色提供文件下载的服务。<br>客户端进入 PXE 流程之后，首先和 DHCP Server 交互获取到 IP 地址，以及 next-server 地址 （就是 iVentoy）和 bootfile 选项的值。 然后接着就会通过 TFTP 从 next-server （iVentoy）那里下载 bootfile 文件，也就是启动文件。启动文件执行之后再加载启动菜单。这个是 PXE 启动的基本流程。<br>这里有一个不好处理的地方就是，客户端有可能是 Legacy BIOS 模式也有可能是 UEFI 模式，这个是不确定的，而 Legacy BIOS 模式和 UEFI 模式所需要的启动文件又是不一样的。<br>如果客户端是 UEFI 模式，而 iVentoy 给客户端发送了 Legacy BIOS 模式的启动文件，则客户端会直接挂死，无法启动。<br>那有没有办法判断客户端到底是 Legacy BIOS 模式还是 UEFI 模式呢（以及 IA32 UEFI 模式和 ARM64 UEFI 模式）？有办法！<br>客户端在进入 PXE 流程的时候，首先是向 DHCP Server 发送 DHCP 请求报文以获取 IP 地址，而在这个请求报文里面就携带了客户端的相关信息，其中就有客户端 BIOS 模式的信息。<br>但问题又来了，这个信息只在 DHCP 请求报文里面存在，当客户端获取完 IP 地址，通过 TFTP 来向 iVentoy 下载启动文件的时候，是不携带这些信息的，这样 iVentoy 还是无法 区分客户端到底是什么 BIOS 模式，该给它发送哪个启动文件。<br>iVentoy 针对不同的场景采用两种不同的方式来解决这个问题，分别对应两种不同的外部 DHCP Server 模式，即 External 模式和 ExternalNet 模式。</li>
+</ol>
+</li>
+<li>2.1 External 模式<br>External 模式的使用场景是 iVentoy 和第三方的 DHCP Server 位于同一个局域网内（比如同一个 VLAN 内）。<br>在这个模式下，iVentoy 还是会启动内部的 DHCP Server，只不过它只监听 DHCP 报文，不会做出任何响应，因此它不会干扰外部 DHCP Server 的工作。<br>因为客户端发出的 DHCP 请求报文是广播形式的，第三方 DHCP Server 能接收到，iVentoy 也能接收到。（他俩在同一个 VLAN 内）。<br>同时通过监听客户端的 DHCP 报文，iVentoy 内部会记录下这个客户端的 BIOS 模式，等后面该客户端来向 iVentoy 请求下载启动文件时，iVentoy 就可以给出正确的启动文件了。<br>因此这种模式下，第三方 DHCP Server 不需要区分客户端的 BIOS 模式，只需要配置一个共同的启动文件名称（比如 iventoy_loader_16000）就可以了。<br>这个文件名其实是一个虚拟的文件名，iVentoy 会根据记录信息判断出客户端的 BIOS 模式然后发送真实的文件给客户端。</li>
+<li>2.2 ExternalNet 模式<br>ExternalNet 模式的使用场景是 iVentoy 和第三方的 DHCP Server 位于不同的局域网内（比如不同的 VLAN 内）。<br>iVentoy 无法监听 DHCP 报文，因为 DHCP 报文被隔离在客户端所在的 VLAN 内，无法到达 iVentoy。<br>在这个模式下，iVentoy 就彻底不再启动内部的 DHCP Server（因为启动了也没用）。那启动文件怎么区分呢？交给第三方 DHCP Server 来完成。<br>即这种模式下第三方 DHCP Server 必须能够动态的根据客户端 DHCP 报文中的信息来告诉客户端不同的启动文件名。<br>比如，如果客户端是 Legacy BIOS 模式，则 bootfile 的值需为 iventoy_loader_16000_bios, 如果是 UEFI 模式，则 bootfile 的值需为 iventoy_loader_16000_uefi 等等。<br>因此，这种模式对于第三方 DHCP Server 的要求很高，必须能够根据 DHCP 报文的信息动态设置 bootfile 选项。<br>大部分 DHCP Server 都不支持这种高级功能（甚至一些 DHCP Server 连最基本的 next-server 和 bootfile 选项的配置都不支持）。<br>当然也有支持的，比如 Windows Server 下的 DHCP Server 以及 Linux 系统中的 dhcp server。<br>以 Linux 下的 DHCP Server 为例，可以在 /etc/dhcp/dhcpd.conf 中按照如下配置：<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174747.png" alt="Img"><br>当然，特殊情况特殊对待，比如我的环境中所有的电脑都是 UEFI 模式的，那即使第三方 DHCP Server 不支持这种高级设置也没事，直接按照 UEFI 模式配置 bootfile 的值即可。</li>
+<li>2.3 特殊应用<br>即使 iVentoy 和第三方 DHCP Server 位于同一个 VLAN 内，也可以使用 ExternalNet 模式，只要能满足你的要求。<br>而且这种使用方式还有一个好处，就是在 ExternalNet 模式下 iVentoy 不再启动内部的 DHCP Server，这样 iVentoy 和第三方 DHCP Server 可以运行在同一个系统内。<br>而 External 模式则不行，因为 External 模式下 iVentoy 还是会启动内部的 DHCP Server，这样两者运行在同一个系统内时会有端口号冲突。</li>
+<li><ol start="3">
+<li>使用方法</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>在 iVentoy 的 参数配置 页面选择 DHCP 服务器模式 为 External 或者 ExternalNet<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174804.png" alt="Img"></li>
+<li>第三方 DHCP Server 中配置 next-server 地址为 iVentoy 运行时选择的本机 IP 地址。</li>
+<li>如果是 External 模式则 bootfile 配置为 iventoy_loader_16000<br> 注意最后的 16000 是和 iVentoy 的 HTTP 服务端口号对应的，如果你在参数配置页面修改了这个值则这里也要对应修改（比如 iventoy_loader_17000)。</li>
+<li>如果是 ExternalNet 模式则则 bootfile 根据 BIOS 模式 Legacy BIOS 模式、X64 UEFI 模式、IA32 UEFI 模式、ARM64 UEFI 模式，分别配置为<br> iventoy_loader_16000_bios 或 iventoy_loader_16000_uefi 或 iventoy_loader_16000_ia32 或 iventoy_loader_16000_aa64</li>
+</ol>
+<h3 id="实战演练"><a href="#实战演练" class="headerlink" title="实战演练"></a>实战演练</h3><p>第三方 DHCP SERVER 配置：华为 S7706 核心交换机<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174842.png" alt="Img"><br>iVentoy 服务器部署：<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174850.png" alt="Img"><br>PEX 客户端重装系统：<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174857.png" alt="Img"><br>疑似不支持封装过的镜像 IOS 安装<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174906.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508174912.png" alt="Img"></p>
+<h1 id="疑难杂症"><a href="#疑难杂症" class="headerlink" title="疑难杂症"></a>疑难杂症</h1><p>待续。。。</p>
+<h1 id="工作随记"><a href="#工作随记" class="headerlink" title="工作随记"></a>工作随记</h1><h2 id="海康威视监控"><a href="#海康威视监控" class="headerlink" title="海康威视监控"></a>海康威视监控</h2><h3 id="基础知识篇："><a href="#基础知识篇：" class="headerlink" title="基础知识篇："></a>基础知识篇：</h3><p>网络监控主机 NVRØ  摄像机首次安装并接入到主机需要输入摄像头的用户名密码，如丢失可以下载海康威视官方 400 密码重置助手。地址<br><a target="_blank" rel="noopener" href="http://www.hikvision.com/cn/wxxz.aspx?key=18%EF%BC%8C%E5%88%9D%E5%A7%8B%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%EF%BC%9Aadmin/12345">http://www.hikvision.com/cn/wxxz.aspx?key=18，初始账号密码：admin/12345</a><br>Ø  海康威视摄像机 DS 开头，萤石摄像机 CS 开头。<br>Ø  老版本的摄像机有初始默认密码，而最新的监控设备不再有出厂默认密码，而是第一次自己设置设备密码（需要记住此密码，最好统一设置）。<br>Ø  一般海康电源适配器剪断后，全黑的线是负极，黑白相间的线是正极。黑色是负极，红色是正极。<br>Ø 交流供电，电源接线不区分正负极<br>直流供电，电源接线需要注意区分正负极<br>Ø  常见供电方式有：直流供电和交流供电；<br>DC 表示设备支持直流供电<br>AC 表示设备支持交流供电<br>Ø  圆口供电口如何区分正负极？<br>接头外层为负极，内芯为正极。<br>Ø  此种接口为绿色接线端子，接头上刻有字体，如图上实物所示为：AC24V 供电。中间是公共接地口，左右两边为供电两极接口，接线不区分正负极。<br>摄像机电源常识 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/N-ffRdC-94Nl_AXFRXGckw">https://mp.weixin.qq.com/s/N-ffRdC-94Nl_AXFRXGckw</a></p>
+<p>Ø  摄像头加入主机步骤：<br>安装部署好新摄像头后，第一步需要激活摄像头，到海康威视下载 SADP 工具来搜索局域网内所有摄像头，笔记本接入局域网内，设置本地设置 IP 为 摄像头默认的网段（192.168.1.1），点击激活状态，查找未激活的摄像头，选中他们设置 IP 等参数，然后激活它们。激活成功后到录像主机里添加对应的摄像头。（注意：每次修改后参数都需要重启一下 SADP 软件）</p>
+<p>问题 1: 录像主机添加摄像头时，出现感叹号，提示不支持 IP 通道码流类型时<br>解决方法：浏览器访问到对应的摄像头登录，修改配置里的视频编码类型（H.264，H.265）<br>问题 2: 忘记摄像头的管理密码<br>解决方法：在 SADP 里头搜索到要改密码的摄像头，选中它然后点击右下角的忘记密码，点击二维码，打开微信公众号海康威视客服助手 - 重置密码 - 扫码找回</p>
+<p>Ø  单通道录像文件大小计算公式如下：<br>文件大小（GBps）= 码流（Kbps）÷8×3600× 每天录像时间（hour）÷1024÷1024<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172322.png" alt="Img"></p>
+<p>海康威视专用监控管理平台 IVMS4200<br>摄像头发现激活管理配置工具 SADP<br>详情下载见海康威视官网</p>
+<h3 id="排错篇"><a href="#排错篇" class="headerlink" title="排错篇"></a>排错篇</h3><h4 id="当使用浏览器访问摄像头画面时出现失败"><a href="#当使用浏览器访问摄像头画面时出现失败" class="headerlink" title="当使用浏览器访问摄像头画面时出现失败"></a>当使用浏览器访问摄像头画面时出现失败</h4><p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172427.png" alt="Img"><br>解决方法：这种情况一般是摄像头固件版本较低导致浏览器访问不了，比如可查看摄像头出厂时间和版本信息是否比较早等。需要升级固件来解决。<br>准备条件：<br>1，笔记本与摄像头网络通畅<br>2，下载摄像头固件新版本（可询问公众号海康威视客户服务）<br>3，将摄像头添加到 4200 客户端，通过远程升级<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172441.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172444.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172448.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172451.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172454.png" alt="Img"></p>
+<h2 id="IDC相关"><a href="#IDC相关" class="headerlink" title="IDC相关"></a>IDC 相关</h2><h3 id="光纤配线架"><a href="#光纤配线架" class="headerlink" title="光纤配线架"></a>光纤配线架</h3><p>光纤配线架（Optical Distribution Frame）ODF，是光传输系统中一个重要的配套设备，它主要用于光缆终端的光纤熔接、光连接器安装、光路的调接、多余尾纤的存储及光缆的保护等，它对于光纤通信网络安全运行和灵活使用有着重要的作用。</p>
+<p>光纤配线架的特点<br>近年来，在光通信建设的实际工作中，通过对几种产品的使用比较，我们认为光纤配线架的选型应重点考虑以下几个方面。</p>
+<p>纤芯容量<br>一个光纤配线架应该能使局内的最大芯数的光缆完整上架，在可能的情况下，可将相互联系比较多的几条光缆上在一个架中，以方便光路调配。同时配线架容量应与通用光缆芯数系列相对应，这样在使用时可减少或避免由于搭配不当而造成光纤配线架容量浪费。</p>
+<p>功能种类<br>光纤配线架作为光缆线路的终端设备应具有 4 项基本功能。<br>固定功能光缆进入机架后，对其外护套和加强芯要进行机械固定，加装地线保护部件，进行端头保护处理，并对光纤进行分组和保护。<br>熔接功能光缆中引出的光纤与尾缆熔接后，将多余的光纤进行盘绕储存，并对熔接接头进行保护。<br>调配功能将尾缆上连带的连接器插接到适配器上，与适配器另一侧的光连接器实现光路对接。适配器与连接器应能够灵活插、拔；光路可进行自由调配和测试。<br>存储功能为机架之间各种交叉连接的光连接线提供存储，使它们能够规则整齐地放置。光纤配线架内应有适当的空间和方式，使这部分光连接线走线清晰，调整方便，并能满足最小弯曲半径的要求。<br>随着光纤网络的发展，光纤配线架现有的功能已不能满足许多新的要求。有些厂家将一些光纤网络部件如分光器、波分复用器和光开关等直接加装到光纤配线架上。这样，既使这些部件方便地应用到网络中，又给光纤配线架增加了功能和灵活性。</p>
+<p>常见的 ODF 配线架<br>常见的 ODF 配线架芯数有：12 芯、24 芯、48 芯、72 芯、96 芯、144 芯等。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172813.png" alt="Img"><br>ODF 中的盘纤盘<br>根据光缆及接口方式的不同，可选择的光纤耦合器有 FC、ST、SC、LC 等，光缆有室内外单模、多模、万兆 OM3 光缆。</p>
+<p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172831.png" alt="Img"><br>FC 光纤适配器</p>
+<p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172847.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172853.png" alt="Img"><br>SC 光纤适配器</p>
+<p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172923.png" alt="Img"><br>LC 光纤适配器</p>
+<p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508172936.png" alt="Img"><br>ST 光纤适配器</p>
+<p>盘纤盘为什么叫一体化熔纤盘？它包含塑料盘、光纤耦合器、光纤尾纤（多数采用束状尾纤）。<br>束状尾纤介绍<br>尾纤束，又称束状尾纤，只有一端有连接头，而另一端是一根光纤的断头，通过熔接与其他光缆纤芯相连，常出现在光纤终端盒、光纤配线架内，用于连接光缆与终端设备。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173010.png" alt="Img"><br>光纤耦合器是光纤与光纤之间进行可拆卸 (活动) 连接的器件，它是把光纤的两个端面紧密对接起来，以使发射光纤输出的光能量能最大限度地耦合到接收光纤中去，并使其介入光链路从而对系统造成的影响减到最小。<br>常用到的光纤耦合器如下：<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173021.png" alt="Img"><br>其中 ODF 中的 FC 耦合器一般用方形耦合器代替。</p>
+<h3 id="光纤跳线区别"><a href="#光纤跳线区别" class="headerlink" title="光纤跳线区别"></a>光纤跳线区别</h3><ol>
+<li>LCSC 光纤跳线的区别<br>1、接口不同：<br>SC 接口为蓝色大方口，外壳呈矩形；LC 接口为蓝色小方口。<br>2、连接方式不同：<br>SC 接头外壳为矩形，采用直接插拔的方式与 SC 耦合器相连接，无需旋转；LC 接头用于连接 SFP 光纤模块，采用操作方便的模块化插孔（RJ）闩锁机理。<br>3、用途不同：<br>SC 在路由器交换机上用得最多；LC 在服务器上常用。</li>
+<li>ST、SC 连接器接头常用于一般网络。<br>ST 头插入后旋转半周有一卡口固定，缺点是容易折断；SC 连接头直接插拔，使用很方便，缺点是容易掉出来；FC 连接头一般电信网络采用，有一螺帽拧到适配器上，优点是牢靠、防灰尘，缺点是安装时间稍长。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173104.png" alt="Img"></li>
+<li>SX/LH 表示可以使用单模或多模光纤<br>在表示尾纤接头的标注中，我们常能见到 “FC/PC”，“SC/PC” 等，其含义如下<br>“/” 前面部分表示尾纤的连接器型号<br>“SC” 接头是标准方型接头，采用工程塑料，具有耐高温，不容易氧化优点。传输设备侧光接口一般用 SC 接头<br>“LC” 接头与 SC 接头形状相似，较 SC 接头小一些。<br>“FC” 接头是金属接头，一般在 ODF 侧采用，金属接头的可插拔次数比塑料要多。</li>
+</ol>
+<h3 id="PON、EPON、GPON架构网络设备知识（光纤入户）"><a href="#PON、EPON、GPON架构网络设备知识（光纤入户）" class="headerlink" title="PON、EPON、GPON架构网络设备知识（光纤入户）"></a>PON、EPON、GPON 架构网络设备知识（光纤入户）</h3><p><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173133.png" alt="Img"><br>基础术语：<br>1、PON 介绍</p>
+<p>PON（无源光网络）技术（包括 EPON，GPON）是发展 FTTx（光纤到户）的主要实现技术，它可节省主干光纤资源和网络层次，在长距离传输条件下可提供双向高带宽能力，接入业务种类丰富，其远程管理能力和无源光分配网结构可大幅降低运维成本，可支持多种应用场景 。</p>
+<p>2、APON（ATMPON）</p>
+<p>ATM 是一种基于信元的传输协议。155Mb/s 的 PON 系统技术规范， ITU-TG.983 系列标准；</p>
+<p>3、BPON（BroadbandPON）</p>
+<p>APON 标准后来得到了加强，可支持 622Mb/s 的传输速率，同时加上了动态带宽分配、保护等功能。</p>
+<p>4、EPON 介绍</p>
+<p>EPON (以太网无源光网络) 是一种采用点到多点网络结构、无源光纤传输方式、基于高速以太网平台和 TDM (时分复用 ) 时分 MAC 媒体访问控制方式、提供多种综合业务的宽带接入技术。</p>
+<p>5、GPON 介绍</p>
+<p>GPON (千兆比无源光网络) 技术是基于 ITU-TG.984.x（国际电联 TG.984.x）标准的最新一代宽带无源光综合接入标准，具有高带宽，高效率，大覆盖范围，用户接口丰富等众多优点，被大多数运营商视为实现接入网业务宽带化，综合化改造的理想技术。</p>
+<p>光纤入户:<br>过程中会涉及到相关的设备，其中最为关键的有 OLT、分光器、ONU、交换机等</p>
+<p>1、OLT 介绍<br>OLT：optical line terminal (光线路终端），用于连接干线的终端设备。OLT 是光接入网的核心部件，相当于传统通信网中的交换机或路由器，也是一个多业务提供平台。一般放置在局端，提供面向用户的无源光纤网络的光纤接口。它主要实现的功能是：上联上层网络，完成 PON 网络的上行接入。通过 ODN 网络（由光纤和无源分光器组成）下连用户端设备 ONU。实现对用户端设备 ONU 的控制、管理和测距等功能。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173155.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173158.png" alt="Img"><br>2、分光器<br>分光器是一种无源器件，又称光分路器，它们不需要外部能量，只要有输入光即可。分光器由入射和出射狭缝、反射镜和色散元件组成，其作用是将所需要的共振吸收线分离出来。分光器是组建 PON 网络的一个组件，是一个连接 OLT 和 ONU 的无源设备，它的功能是分发下行数据，并集中上行数据。 分光器带有一个上行光接口，若干下行光接口。1:N    常用分光器的分路比有 1:2、1:4、1:8、1:16、1:32、1:64 几种。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173209.png" alt="Img"><br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173211.png" alt="Img"><br>3、ONU 介绍<br>ONU 光网络单元，ONU 分为有源光网络单元和无源光网络单元。一般把装有包括光接收机、上行光发射机、多个桥接放大器网络监控的设备叫做光节点。PON 使用单光纤连接到 OLT，然后 OLT 连接到 ONU。ONU 提供数据、IPTV（即交互式网络电视），语音（使用 IAD，即 Integrated Access Device 综合接入设备）等业务。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173222.png" alt="Img"><br>ONU 的应用可以看如下图：<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173235.png" alt="Img"><br>ONU 具有两点作用：对 OLT 发送的广播进行选择性接收，若需要接收该数据要对 OLT 进行接收响应；对用户的需要发送的以太网数据进行收集和缓存，按照被分配的发送窗口向 OLT 端发送该缓存数据。应用 ONU 可以有效提高整个系统的上行带宽利用率，还能够根据网络应用环境和适用业务特点对信道带宽进行配置，在不影响通信效率和通信质量的条件下承载尽量多的终端用户，提高网络利用率，降低用户成本。</p>
+<h3 id="交换机介绍"><a href="#交换机介绍" class="headerlink" title="交换机介绍"></a>交换机介绍</h3><p>交换机（Switch）意为” 开关” 是一种用于电（光）信号转发的网络设备，实现设备与设备之间数据交换，达到相互访问功能。它可以为接入交换机的任意两个网络节点提供独享的电信号通路。最常见的交换机是以太网交换机。交换机总类非常多，不同总类有不同叫法，按设备层级接入有接入型交换机，汇聚型交换机及核心交换机；还有交换层分为二层交换机、三层交换机、四层交换机等。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173305.png" alt="Img"><br>5、光猫<br>光猫是数字调制解调器，把光信号转换成数字信号，是一种类似于基带 modem（数字调制解调器）的设备，和基带 modem 不同的是接入的是光纤专线，是光信号。光猫用于广域网中光电信号的转换和接口协议的转换（重点），接入路由器，是广域网接入。光纤收发器是用局域网中光电信号的转换，而仅仅是信号转换，没有接口协议的转换。光纤入户后，基本放在家庭弱电箱里，以白色为主，印有运营商 LOGO，办理宽带时运营商免费赠送的。<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173320.png" alt="Img"><br>光纤收发器 （单模 多模）<br>参见：<a target="_blank" rel="noopener" href="https://blog.csdn.net/pokes/article/details/122154492">https://blog.csdn.net/pokes/article/details/122154492</a><br>单模光纤采用固体激光器做光源，多模光纤采用发光二极管做光源；</p>
+<p>单模光纤传输频带宽、传输距离长，但是需要激光源，成本较高，多模光纤传输速度低、距离短，成本低；<br>多模：采用 LED（发光二极管）或垂直腔面发射激光器（VCSEL）作为光源，因为 LED 光源能产生许多模式的光（光较分散）。<br>单模：采用激光器或激光二极管作为光源，因为激光光源能产生单一模式的光，具备高亮度、高功率等优势。<br>当光纤收发器内嵌光模块时，光纤收发器按照所连接的光纤跳线的纤芯的数量的不同分为单纤收发器与双纤收发器。<br>单纤收发器：单纤收发器连接的光纤跳线的线性为一个纤芯，这一个纤芯既负责传输数据又负责接收数据；<br>双纤收发器：双纤收发器所连接的光纤跳线的线性为两个纤芯，其中一个纤芯负责传输数据，另一个纤芯负责接收数据。<br>当光纤收发器没有内嵌光模块时，需要根据所插入的光模块来区分是单纤收发器还是双纤收发器。当光纤收发器内插入的是单纤双向光模块，即接口为单工类型时，此光纤收发器为单纤收发器；当光纤收发器内插入的是双纤双向光模块，即接口为双工类型时，此收发器为双纤收发器。</p>
+<h2 id="网站备案"><a href="#网站备案" class="headerlink" title="网站备案"></a>网站备案</h2><p>备案概述 - 网站备案 - 备案介绍：<br>各大企业云官网均可以完成备案需求<br>参见华为云备案：<a target="_blank" rel="noopener" href="https://support.huaweicloud.com/icp/index.html">https://support.huaweicloud.com/icp/index.html</a></p>
+<h3 id="备案概述"><a href="#备案概述" class="headerlink" title="备案概述"></a>备案概述</h3><p>为了规范互联网信息服务活动，促进互联网信息服务健康有序发展，根据国务院令第 292 号《互联网信息服务管理办法》和工信部令第 33 号《非经营性互联网信息服务备案管理办法》规定，国家对经营性互联网信息服务实行许可制度，对非经营性互联网信息服务实行备案制度。未取得许可或者未履行备案手续的，不得从事互联网信息服务，否则就属于违法行为。</p>
+<p>通俗来讲：想要开办网站必须先办理网站备案，备案成功取得通信管理局下发的 ICP 备案号后才能开通访问。</p>
+<h4 id="备案的目的"><a href="#备案的目的" class="headerlink" title="备案的目的"></a>备案的目的</h4><p>根据国家有关规定，使用大陆服务器开办网站，需要先进行网站备案并获取通信管理局下发的 ICP 备案号，然后才能开通网站访问。</p>
+<p>备案成功后，通信管理局会分配主体备案号给备案主体（个人或单位均可称为主体），同时也会给此次备案的网站分配网站备案号。</p>
+<p>主体备案号格式为：（省简写）ICP 备 + 主体序列号（8 位数字）</p>
+<p>网站备案号格式为：（省简写）ICP 备 + 主体序列号（8 位数字）- 网站序列号</p>
+<p>举例：</p>
+<p>天翼云官网（域名 ctyun.cn）的网站备案号为：京 ICP 备 12022551 号 - 1 </p>
+<p>公司主体备案号为：京 ICP 备 12022551 号。</p>
+<h4 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h4><p>备案只针对一级域名</p>
+<p>只需备案一级域名，一级域名备案后对应的二级域名、三级域名可以正常使用。</p>
+<p>举例：天翼云官网的一级域名为：ctyun.cn，备案完成后对应的二级域名：xx.ctyun.cn 均可正常使用。</p>
+<p>境外注册域名不可进行备案。</p>
+<h4 id="备案类型"><a href="#备案类型" class="headerlink" title="备案类型"></a>备案类型</h4><p>根据主体和域名是否第一次做备案，可以分为不同的备案类型，不同的备案类型填写的信息略有差异。</p>
+<h4 id="增加备案信息的类型"><a href="#增加备案信息的类型" class="headerlink" title="增加备案信息的类型"></a>增加备案信息的类型</h4><p>首次备案（新增备案）：主体和域名均为第一次做备案。</p>
+<p>新增网站：该主体已备案过其他网站，此次填写的域名是第一次做备案。</p>
+<p>接入备案：主体和域名均已备案，此次备案是办理接入商的变更。</p>
+<p>您在填写前可登陆：</p>
+<p>beian.miit.gov.cn 进行备案类型验证。</p>
+<h4 id="删除备案信息的类型"><a href="#删除备案信息的类型" class="headerlink" title="删除备案信息的类型"></a>删除备案信息的类型</h4><p>注销主体：删除该主体下的所有备案信息，包括主体信息和网站信息</p>
+<p>注销网站：删除主体下的某个网站，主体信息仍然保留</p>
+<p>取消接入：删除备案信息和接入商的关联，建议在新的接入商处完成接入备案后再取消接入，否则备案信息可能会被通信管理局注销</p>
+<h4 id="修改备案信息的类型"><a href="#修改备案信息的类型" class="headerlink" title="修改备案信息的类型"></a>修改备案信息的类型</h4><p>变更主体：变更主体信息，如修改公司通信地址等</p>
+<p>变更网站：变更网站信息，如新增域名、修改网站负责人、变更 IP 等</p>
+<p>只有在天翼云完成备案的网站，才可以提交变更。</p>
+<h3 id="备案需要准备什么材料"><a href="#备案需要准备什么材料" class="headerlink" title="备案需要准备什么材料"></a>备案需要准备什么材料</h3><h4 id="个人备案"><a href="#个人备案" class="headerlink" title="个人备案"></a>个人备案</h4><p>A. 二代身份证扫描件或拍照件</p>
+<p>B. 《网站备案真实性核验单》：可登陆 <a target="_blank" rel="noopener" href="https://www.ctyun.cn/record2/index%EF%BC%8C%E6%A0%B9%E6%8D%AE%E8%8A%82%E7%82%B9%E4%B8%8B%E8%BD%BD%EF%BC%9A%E4%BA%91%E4%B8%9A%E5%8A%A1%E7%9C%9F%E5%AE%9E%E6%80%A7%E6%A0%B8%E9%AA%8C%E5%8D%95%E3%80%82">https://www.ctyun.cn/record2/index，根据节点下载：云业务真实性核验单。</a></p>
+<p>C. 电子版域名证书：</p>
+<p>可登陆注册域名的网站下载域名证书，或登陆 whois.chinaz.com，输入域名后将像是到期时间的页面进行截图。</p>
+<p>根据《工业和信息化部关于规范互联网信息服务使用域名的通知》工信部信管﹝2017﹞264 号规定，自 2018 年 1 月 1 日起，域名注册所有人必须是备案主体或者备案主体单位法人。</p>
+<p>D. 电子版信息需原件的地区（可选）：</p>
+<p>根据管局规定，浙江、宁夏、上海、内蒙、河北、湖南、北京、陕西、重庆、四川、甘肃、天津、黑龙江、山东地区所上传电子版必须为原件扫描件或拍照。不可使用彩色复印件。</p>
+<p>E. 真实性承诺书（可选）：</p>
+<p>使用广东、成都节点邮寄纸质材料时，需提供真实性承诺书，并填写完整，在指定位置签字或盖章。下载位置：<a target="_blank" rel="noopener" href="https://www.ctyun.cn/record2/index%E3%80%82">https://www.ctyun.cn/record2/index。</a></p>
+<h4 id="单位备案"><a href="#单位备案" class="headerlink" title="单位备案"></a>单位备案</h4><p>A. 单位证件：</p>
+<p>企业需提供营业执照（副本）扫描件 / 拍照件、企事业等单位提供组织结构代码证扫描件 / 拍照件</p>
+<p>B. 负责人身份证扫描件 / 拍照件（外国人可提供护照等其他证件）</p>
+<p>C. 《网站备案真实性核验单》：下载位置：<a target="_blank" rel="noopener" href="https://www.ctyun.cn/record2/index">https://www.ctyun.cn/record2/index</a> 根据节点下载云业务真实性核验单</p>
+<p>D. 可登陆注册域名的网站下载域名证书，或登陆 whois.chinaz.com，输入域名后将像是到期时间的页面进行截图。</p>
+<p>根据《工业和信息化部关于规范互联网信息服务使用域名的通知》工信部信管﹝2017﹞264 号规定，自 2018 年 1 月 1 日起，域名注册所有人必须是备案主体或者备案主体单位法人。</p>
+<p>E. 网站负责人法人授权书（可选）：</p>
+<p>如果网站负责人填写的不是法人，还需额外提供授权书。下载位置：<a target="_blank" rel="noopener" href="https://www.ctyun.cn/record2/index">https://www.ctyun.cn/record2/index</a> 根据不同节点下载：委托书。</p>
+<p>E. 真实性承诺书（可选）：</p>
+<p>使用广东、成都节点邮寄纸质材料时，需提供真实性承诺书，并填写完整，在指定位置签字或盖章。下载位置：<a target="_blank" rel="noopener" href="https://www.ctyun.cn/record2/index%E3%80%82">https://www.ctyun.cn/record2/index。</a></p>
+<h4 id="接入备案"><a href="#接入备案" class="headerlink" title="接入备案"></a>接入备案</h4><p>为什么要办理接入备案？根据国家相关要求，如果您已在 A 接入商购买服务器并成功办理了网站备案，当您将网站重新搭建在 B 接入商平台上后（或网站同时在多家接入商平台上运营），原来的备案信息需要同时接入 B 接入商，备案信息接入 B 接入商的过程称为 “接入备案”。</p>
+<p>另外，如果不办理接入备案即开通网站，您的网站将有可能被阻断无法访问</p>
+<h4 id="使用海外服务器不需要备案"><a href="#使用海外服务器不需要备案" class="headerlink" title="使用海外服务器不需要备案"></a>使用海外服务器不需要备案</h4><p>购买中国香港或海外服务器无需备案，备案仅针对国内 ip。</p>
+<h4 id="境外企业如何备案"><a href="#境外企业如何备案" class="headerlink" title="境外企业如何备案"></a>境外企业如何备案</h4><p>目前境外企业无法备案，需要在大陆设立分公司持有国家认可的单位证件才能进行备案。（建议境外企业考虑使用中国香港服务器，使用中国香港服务器无需备案）</p>
+<h4 id="备案专有名词"><a href="#备案专有名词" class="headerlink" title="备案专有名词"></a>备案专有名词</h4><p>一级域名：一级域名也叫顶级域名，abc.com 即为一级域名，a.abc.com 为二级域名；几级域名不单单是以符号 “.” 的个数来定，如 abc.edu.cn 也为一级域名，因为 edu.cn 本身也是一个域名后缀。</p>
+<p>主体：办理备案的个人或者单位均称为备案主体</p>
+<p>接入商：提供网站搭建平台并协助您办理备案的即为接入商</p>
+<p>主体负责人：单位办理备案时填写的主办单位负责人，一般建议填写公司法人</p>
+<p>网站负责人：单位办理备案时填写的网站负责人，负责网站建设等工作，可以填写法人也可以根据实际情况填写相关负责人<br>备案限制</p>
+<h3 id="网站、域名数量限制"><a href="#网站、域名数量限制" class="headerlink" title="网站、域名数量限制"></a>网站、域名数量限制</h3><p>1 个 IP 可以备案 5 个网站。</p>
+<h4 id="不备案会有什么影响"><a href="#不备案会有什么影响" class="headerlink" title="不备案会有什么影响"></a>不备案会有什么影响</h4><p>建议准备搭建网站的客户先备案再开通网站。如果网站域名已存在备案号，但之前不是在天翼云备案的，也请您先办理接入备案，待接入备案通过通信管理局审核后，再解析到天翼云服务器。<br> 备案需要什么材料？</p>
+<p>A：企业：单位证件、法人身份证、网站负责人身份证、域名证书、安全承诺书、委托书（主体负责人与网站管理员为同一人时可不用提供）、真实性核验单、现场核验照。</p>
+<p>快速网站备案流程如下：<br><img src="/./FILES/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0.md/img-20250508173503.png" alt="Img"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <span class="social-link">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </span>
+
+          <img class="social-item-img" src="/images/wechat_channel.jpg">
+      </div>
+  </div>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/05/07/RHCE%E7%AC%94%E8%AE%B0/" rel="prev" title="RHCE 笔记">
+                  <i class="fa fa-angle-left"></i> RHCE 笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="SOHUCS" sid="3aaab13b6cc7d05285c49e317838d88c"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Fangxz</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">13k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">47 分钟</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyxTsqYtv","appkey":"23b85cbf5cc872c60b4232b1720e4deb","count":true}</script>
+<script src="/js/third-party/comments/changyan.js" defer></script>
+
+</body>
+</html>
