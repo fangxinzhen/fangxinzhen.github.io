@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="此篇笔记是工作实战部署记录，从 ESXI 到 VC 的安装及配置以及注意事项，末尾也会分享软件包和 PJ 工具以及官方技术文档百度网盘资源分享见篇尾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vSphere Server 笔记">
+<meta property="og:url" content="http://example.com/2025/05/13/vSphere-Server%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Fangxz&#39;Blogs">
+<meta property="og:description" content="此篇笔记是工作实战部署记录，从 ESXI 到 VC 的安装及配置以及注意事项，末尾也会分享软件包和 PJ 工具以及官方技术文档百度网盘资源分享见篇尾">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164152.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164155.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164158.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164201.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164222.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164225.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164251.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164254.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164317.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164320.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164323.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164326.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164329.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164332.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164348.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164351.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164428.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164431.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164554.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164557.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164601.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164604.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164607.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164610.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164614.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164617.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164619.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164623.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164629.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164633.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164701.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164808.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165409.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165447.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165521.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164821.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164939.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164944.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164947.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164950.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164954.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164959.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165044.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165053.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165056.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165100.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165104.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165114.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165136.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165140.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165143.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165147.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165200.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165212.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165216.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165219.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165223.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165610.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165619.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165631.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165636.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165645.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165938.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170007.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170010.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170013.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170015.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170106.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170132.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170136.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170752.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170756.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170802.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170806.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170828.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170916.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170920.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170923.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170926.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170929.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170932.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170936.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170939.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170942.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171008.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171013.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171016.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171019.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171023.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171047.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171050.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171053.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171056.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171059.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171102.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171105.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171108.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171111.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171118.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171144.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171352.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171355.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171408.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171411.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171413.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171416.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171428.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171159.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171202.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171205.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171208.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171213.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171217.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171220.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171223.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171226.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171302.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171305.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171308.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171311.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171314.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171618.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171626.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171635.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171639.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171644.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171648.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171651.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171654.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171659.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171704.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171709.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171735.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171738.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171927.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171931.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171935.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171938.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171943.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171947.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172018.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172020.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172035.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172040.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172044.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172047.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172101.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172104.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172107.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172110.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172113.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172130.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172219.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172223.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172226.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172235.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172238.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172246.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172249.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172253.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172342.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172353.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172457.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172500.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172503.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172506.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172509.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172512.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172515.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172519.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172522.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172532.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172547.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172843.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172904.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173138.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173206.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173258.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173301.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173304.png">
+<meta property="og:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173309.png">
+<meta property="article:published_time" content="2025-05-13T07:30:10.000Z">
+<meta property="article:modified_time" content="2025-05-13T09:35:14.264Z">
+<meta property="article:author" content="Fangxz">
+<meta property="article:tag" content="方信镇, 个人博客, 记录,生活,学习,笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164152.png">
+
+
+<link rel="canonical" href="http://example.com/2025/05/13/vSphere-Server%E7%AC%94%E8%AE%B0/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2025/05/13/vSphere-Server%E7%AC%94%E8%AE%B0/","path":"2025/05/13/vSphere-Server笔记/","title":"vSphere Server 笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>vSphere Server 笔记 | Fangxz'Blogs</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js" defer></script>
+  <script async src="https://hm.baidu.com/hm.js?475b386414974d18a03f7b3e29226e33"></script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"0H5NvXonej8W1o8nQJgJeF0D-gzGzoHsz","app_key":"YJ6l8fYyuouqvj1neakqXFZT","server_url":"https://0h5nvxon.lc-cn-n1-shared.com","security":true}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Fangxz'Blogs</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录美好生活与学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-运维"><a href="/categories/%E8%BF%90%E7%BB%B4/" rel="section"><i class="fa fa-cogs fa-fw"></i>运维</a></li><li class="menu-item menu-item-虚拟化"><a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" rel="section"><i class="fa fa-clone fa-fw"></i>虚拟化</a></li><li class="menu-item menu-item-windows|linux"><a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="section"><i class="fa fa-linux fa-fw"></i>Windows|Linux</a></li><li class="menu-item menu-item-系统|服务"><a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" rel="section"><i class="fa fa-server fa-fw"></i>系统|服务</a></li><li class="menu-item menu-item-趣闻"><a href="/categories/%E8%B6%A3%E9%97%BB/" rel="section"><i class="fa fa-newspaper fa-fw"></i>趣闻</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ESXI"><span class="nav-number">1.</span> <span class="nav-text">ESXI</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%99%9A%E6%8B%9F%E5%8C%96VMware-ESXI-7-0%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.</span> <span class="nav-text">安装虚拟化 VMware ESXI 7.0 操作系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95VMware-ESXI%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%EF%BC%8C%E6%A3%80%E6%9F%A5%E5%9F%BA%E6%9C%AC%E5%8F%82%E6%95%B0%E4%BF%A1%E6%81%AF%E5%92%8C%E6%BF%80%E6%B4%BBESXI"><span class="nav-number">1.3.</span> <span class="nav-text">登录 VMware ESXI 管理平台，检查基本参数信息和激活 ESXI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8VMware-vSphere-Client-%E4%B8%B4%E6%97%B6-%E6%9D%A5%E7%AE%A1%E7%90%86ESXI%E8%8A%82%E7%82%B9"><span class="nav-number">1.4.</span> <span class="nav-text">使用 VMware vSphere Client (临时) 来管理 ESXI 节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.5.</span> <span class="nav-text">安装虚拟机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ESXI%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%85%B3%E6%9C%BA%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.6.</span> <span class="nav-text">ESXI 服务器关机步骤</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware-vCenter-Server"><span class="nav-number">2.</span> <span class="nav-text">VMware vCenter Server</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85VCSA-%E6%9C%89DNS%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">安装 VCSA 有 DNS 部署方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95VC"><span class="nav-number">2.2.</span> <span class="nav-text">登录 VC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#esxi%E8%AE%BF%E9%97%AE"><span class="nav-number">2.2.1.</span> <span class="nav-text">esxi 访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VC%E8%AE%BF%E9%97%AE"><span class="nav-number">2.2.2.</span> <span class="nav-text">VC 访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VC%E8%AE%BE%E5%A4%87%E5%90%8E%E5%8F%B0"><span class="nav-number">2.2.3.</span> <span class="nav-text">VC 设备后台</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VCSA-%E6%97%A0DNS%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">VCSA   无 DNS 部署方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E5%B9%B6%E7%BB%99ESXI%E8%8A%82%E7%82%B9%E5%92%8CvCenter-Server-%E9%85%8D%E7%BD%AEFQDN"><span class="nav-number">2.4.</span> <span class="nav-text">DNS 域名服务器搭建并给 ESXI 节点和 vCenter Server 配置 FQDN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BF%80%E6%B4%BBVC"><span class="nav-number">2.5.</span> <span class="nav-text">激活 VC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%92%E9%94%99"><span class="nav-number">2.6.</span> <span class="nav-text">排错</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86-vSphere-vCtener"><span class="nav-number">3.</span> <span class="nav-text">配置管理 vSphere vCtener</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">初始化基础配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83"><span class="nav-number">3.1.1.</span> <span class="nav-text">新建数据中心</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">新建集群</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%B8%BB%E6%9C%BA"><span class="nav-number">3.1.1.1.1.</span> <span class="nav-text">添加主机</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.1.1.2.</span> <span class="nav-text">快速入门配置</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">创建管理网络</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="nav-number">3.1.1.2.1.</span> <span class="nav-text">新建分布式交换机</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%B8%BB%E6%9C%BA-1"><span class="nav-number">3.1.1.2.2.</span> <span class="nav-text">添加主机</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E5%88%86%E5%B8%83%E5%BC%8F%E7%AB%AF%E5%8F%A3%E7%BB%84"><span class="nav-number">3.1.1.2.3.</span> <span class="nav-text">新建分布式端口组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%93%BE%E8%B7%AF%E8%81%9A%E5%90%88%E7%BB%84"><span class="nav-number">3.1.1.2.4.</span> <span class="nav-text">创建链路聚合组</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E4%B8%BB%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="nav-number">3.1.1.3.</span> <span class="nav-text">管理主机网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4%E5%AD%98%E5%82%A8"><span class="nav-number">3.1.1.4.</span> <span class="nav-text">创建集群存储</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">3.2.</span> <span class="nav-text">虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A8%A1%E6%9D%BF"><span class="nav-number">3.2.1.</span> <span class="nav-text">虚拟机模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BA%94%E7%AD%94%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.2.</span> <span class="nav-text">Windows 自定义应答配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE%E5%BA%94%E7%AD%94"><span class="nav-number">3.2.3.</span> <span class="nav-text">Linux 自定义配置应答</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">3.2.4.</span> <span class="nav-text">虚拟机常用操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E7%83%AD%E6%8F%92%E6%8B%94"><span class="nav-number">3.2.4.1.</span> <span class="nav-text">启用热插拔</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%B0%E5%8E%9F%E5%A7%8B%E5%AD%98%E5%82%A8%EF%BC%88LUN%EF%BC%89%E7%9A%84%E6%98%A0%E5%B0%84%EF%BC%88RDM%EF%BC%89"><span class="nav-number">3.2.4.2.</span> <span class="nav-text">添加虚拟机到原始存储（LUN）的映射（RDM）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VCSA%E8%99%9A%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%A4%87%E4%BB%BD%E4%B8%8E%E8%BF%98%E5%8E%9F"><span class="nav-number">3.3.</span> <span class="nav-text">VCSA 虚机系统备份与还原</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vSphere-%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD%E5%BA%94%E7%94%A8%E9%98%B6%E6%AE%B5"><span class="nav-number">4.</span> <span class="nav-text">vSphere 高级功能应用阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vMotion%EF%BC%88%E7%83%AD%E8%BF%81%E7%A7%BB%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">vMotion（热迁移）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VC%E9%9B%86%E6%88%90%E5%9F%9F%E8%AE%A4%E8%AF%81%E7%99%BB%E5%BD%95"><span class="nav-number">4.2.</span> <span class="nav-text">VC 集成域认证登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HA"><span class="nav-number">4.3.</span> <span class="nav-text">HA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DRS-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6"><span class="nav-number">4.4.</span> <span class="nav-text">DRS (分布式资源调度)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FT%EF%BC%88%E5%AE%B9%E9%94%99%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">FT（容错）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VDP-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">4.6.</span> <span class="nav-text">VDP (备份恢复虚拟机)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E6%9C%BAUSB%E4%B8%8EUSB%E6%8E%A7%E5%88%B6%E5%99%A8%E5%8C%BA%E5%88%AB"><span class="nav-number">5.1.</span> <span class="nav-text">主机 USB 与 USB 控制器区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E9%95%9C%E5%83%8F%E5%88%B0-Vsphere%E4%B8%AD%E5%BF%83%E5%A4%B1%E8%B4%A5%EF%BC%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">上传镜像到 Vsphere 中心失败，解决方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Esxi%E4%B8%BB%E6%9C%BA%E5%86%85%E5%AD%98%E6%89%A9%E5%AE%B9"><span class="nav-number">5.3.</span> <span class="nav-text">Esxi 主机内存扩容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E6%8E%A7%E5%9C%A8%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">5.4.</span> <span class="nav-text">域控在虚拟化中的注意点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">5.5.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VCSA%E5%85%B3%E6%9C%BA%E5%92%8Cesxi%E8%BF%9B%E5%85%A5%E7%BB%B4%E6%8A%A4%E6%A8%A1%E5%BC%8F%E9%A1%BA%E5%BA%8F%E9%94%99%E8%AF%AF"><span class="nav-number">5.6.</span> <span class="nav-text">VCSA 关机和 esxi 进入维护模式顺序错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E7%BD%91%E7%BB%9C%E9%80%82%E9%85%8D%E5%99%A8%E5%8D%B3%E7%BD%91%E5%8D%A1%E7%B1%BB%E5%9E%8B%E5%8C%BA%E5%88%AB"><span class="nav-number">5.7.</span> <span class="nav-text">虚拟机的网络适配器即网卡类型区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VMware-Converte-%E5%AE%98%E6%96%B9P2V%E8%BD%AC%E6%8D%A2%E5%B7%A5%E5%85%B7"><span class="nav-number">5.8.</span> <span class="nav-text">VMware_Converte 官方 P2V 转换工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EVC%E7%9A%84%E8%AE%B8%E5%8F%AF%E8%AF%81%E6%B7%BB%E5%8A%A0%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">5.9.</span> <span class="nav-text">关于 VC 的许可证添加注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E5%88%86%E4%BA%AB"><span class="nav-number">6.</span> <span class="nav-text">资源分享</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Fangxz"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Fangxz</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fangxinzhen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fangxinzhen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xinzhen_fang@126.com" title="E-Mail → mailto:xinzhen_fang@126.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/05/13/vSphere-Server%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Fangxz">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fangxz'Blogs">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="vSphere Server 笔记 | Fangxz'Blogs">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vSphere Server 笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-13 15:30:10 / 修改时间：17:35:14" itemprop="dateCreated datePublished" datetime="2025-05-13T15:30:10+08:00">2025-05-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">虚拟化</span></a>
+        </span>
+    </span>
+
+  
+    <span id="/2025/05/13/vSphere-Server%E7%AC%94%E8%AE%B0/" class="post-meta-item leancloud_visitors" data-flag-title="vSphere Server 笔记" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="vSphere Server 笔记" href="/2025/05/13/vSphere-Server%E7%AC%94%E8%AE%B0/#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::26778dfedb5ab1e26cbcd5e2a6e255ae" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>此篇笔记是工作实战部署记录，从 ESXI 到 VC 的安装及配置以及注意事项，末尾也会分享软件包和 PJ 工具以及官方技术文档<br><em>百度网盘资源分享见篇尾</em></p>
+<span id="more"></span>
+<h1 id="ESXI"><a href="#ESXI" class="headerlink" title="ESXI"></a>ESXI</h1><h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>硬件平台：IBM 3650 M4 , 内存 64G  SAS 硬盘 800G;<br>               IBM 3650 M4 , 内存 64G  SAS 硬盘 1.5T;<br>软件部署：VMware ESXI 7.0 （VMware vSphere 7 Enterprise Plus）<br>  VMware ESXI 7.0 密钥，及 VCSA7.0 密钥激活工具（见网盘）</p>
+<h2 id="安装虚拟化VMware-ESXI-7-0操作系统"><a href="#安装虚拟化VMware-ESXI-7-0操作系统" class="headerlink" title="安装虚拟化VMware ESXI 7.0操作系统"></a>安装虚拟化 VMware ESXI 7.0 操作系统</h2><p>1, 配置磁盘阵列 RAID , 选择 RAID 5 （三块盘以上）， 注：不能在 UEFI 模式下安装 ESXI 系统。<br>2，制作 ESXI 7.0 的光盘或 U 盘启动。<br>3，安装步骤有四个如下：输入 root 管理员密码（需要记住此密码）；配置管理网络；选择网络适配器；配置静态 IPv4；配置 DNS；测试管理网络；<br>如：<br>ESXI 01 IP:192.168.2.163<br>ESXI 01 IP:192.168.2.164<br>建议物理机节点和虚拟机节点 IP 段分开<br>注意事项：如果出现网络测试不通的情况。第一检查服务器硬件网卡 NIC 是否开启；第二选择 ESXI 控制面板的网络适配器，检查是否选中物理网线连接的 NIC 网卡及连通状态；若还是 failed 则检查网线连接的交换机是否正常（例如用笔记本来与服务器网线直连测试）。<br>CD-ROM 安装 ESXI7.0 步骤省略</p>
+<h2 id="登录VMware-ESXI管理平台，检查基本参数信息和激活ESXI"><a href="#登录VMware-ESXI管理平台，检查基本参数信息和激活ESXI" class="headerlink" title="登录VMware ESXI管理平台，检查基本参数信息和激活ESXI"></a>登录 VMware ESXI 管理平台，检查基本参数信息和激活 ESXI</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164152.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164155.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164158.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164201.png" alt="Img"></p>
+<h2 id="使用VMware-vSphere-Client-临时-来管理ESXI节点"><a href="#使用VMware-vSphere-Client-临时-来管理ESXI节点" class="headerlink" title="使用VMware vSphere Client (临时)来管理ESXI节点"></a>使用 VMware vSphere Client (临时) 来管理 ESXI 节点</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164222.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164225.png" alt="Img"><br><em>备注：ESXI 7.0 不支持 vsphere client 远程控制 (ESXI 6.0 可以)，所以建议在 ESXI 网页上操作，先安装 Windows server 虚拟机，然后在里边引导安装 Vmware vSphere vCenter 来控制 ESXI 节点。</em><br>也可以通过 Vmware WorkStation 来简便快捷管理 ESXI 物理节点和虚拟机节点，步骤如下：<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164251.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164254.png" alt="Img"></p>
+<h2 id="安装虚拟机"><a href="#安装虚拟机" class="headerlink" title="安装虚拟机"></a>安装虚拟机</h2><p>Windows 安装步骤：<br>采用 CD 光盘镜像安装<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164317.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164320.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164323.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164326.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164329.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164332.png" alt="Img"><br><em>上传 IOS 镜像安装操作系统（推荐这个方式安装）：</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164348.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164351.png" alt="Img"><br>其它步骤同上。<br>Linux 安装步骤：<br>xxxxx</p>
+<h2 id="ESXI服务器关机步骤"><a href="#ESXI服务器关机步骤" class="headerlink" title="ESXI服务器关机步骤"></a>ESXI 服务器关机步骤</h2><p>先将 ESXI 服务器内的虚拟机关机，然后开启 ESXI 的维护模式，再正常关机。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164428.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164431.png" alt="Img"></p>
+<h1 id="VMware-vCenter-Server"><a href="#VMware-vCenter-Server" class="headerlink" title="VMware vCenter Server"></a>VMware vCenter Server</h1><h2 id="安装VCSA-有DNS部署方法"><a href="#安装VCSA-有DNS部署方法" class="headerlink" title="安装VCSA 有DNS部署方法"></a>安装 VCSA 有 DNS 部署方法</h2><p>1、安装 vCenter Server 前需要在 ESXI 节点上准备一个 Windows server 虚机平台<br>2、选择一台 Windows server 虚机（或外部物理服务器）预先配置好 vCenter Server 的 FQDN 域名服务，优先使用虚机部署 DNS<br>3,   如果是同一个网段局域网可不用域名解析，直接使用 IP 来部署 VCSA (能用域名就用域名)<br>规划 IP 及域名等名称<br>FQDN : vcsa7.vsphere.com<br>IP： 192.168.2.210<br>浏览器地址：<a href="https://vcsa7.vsphere.com:5480或https://192.168.2.210">https://vcsa7.vsphere.com:5480 或 https://192.168.2.210</a><br>SSO  登录：<br>账号：<a href="mailto:administrator@vsphere.local">administrator@vsphere.local</a><br>密码：Vcsa2023!!!</p>
+<p>先按步骤八配置好 DNS 服务器，再步骤七<br>备注：<br>vCenter Server Appliance (VCSA) 和 vcenter (VC) 区别为：系统不同、虚拟化环境不同、部署不同。</p>
+<p>一、系统不同</p>
+<p>1、vCenter Server Appliance：vCenter Server Appliance 基于嵌入式 linux 系统。</p>
+<p>2、vcenter：vcenter 基于 Windows 系统。</p>
+<p>二、虚拟化环境不同</p>
+<p>1、vCenter Server Appliance：vCenter Server Appliance 应用于较小的虚拟化环境，主机小于 50 台，虚拟机少于 1000 个。</p>
+<p>2、vcenter：vcenter 应用于较大的虚拟化环境，主机大于 50 台，虚拟机多于 1000 个。<br>三、部署不同</p>
+<p>1、vCenter Server Appliance：vCenter Server Appliance 需要安装” 客户端集成插件” 并执行光盘中的 vcsa-setup.html，以 HTML 的方式部署。</p>
+<p>2、vcenter：vcenter 支持使用 vSphere Client 或 vSphere Web Client 部署<br>总结一句话：VCSA 和 VC 都差不多</p>
+<p>1、下载并制作 VMware vCenter Server （VC 或 VCSA）的光盘镜像（或 ISO 安装包）。插入 ESXI 服务器光盘驱动中。上传 ESXI 文件夹中（先确保配置好域名解析服务 FQND , 见步骤八）<br>以下使用的是 VCSA 7.0 安装过程步骤：（其它版本的同理）<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164554.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164557.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164601.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164604.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164607.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164610.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164614.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164617.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164619.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164623.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164629.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164633.png" alt="Img"><br><em>大约等待 60 分钟左右，已成功！！！！！</em><br><strong>开始登录 VC！！！</strong></p>
+<h2 id="登录VC"><a href="#登录VC" class="headerlink" title="登录VC"></a>登录 VC</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164701.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164808.png" alt="Img"></p>
+<h3 id="esxi访问"><a href="#esxi访问" class="headerlink" title="esxi访问"></a>esxi 访问</h3><p>https://esxi 的 IP /ui/、<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165409.png" alt="Img"></p>
+<h3 id="VC访问"><a href="#VC访问" class="headerlink" title="VC访问"></a>VC 访问</h3><p>vCenter Client（默认端口是 443，如果修改了则添加自己修改后的端口访问）<br>https:// IP /<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165447.png" alt="Img"></p>
+<h3 id="VC设备后台"><a href="#VC设备后台" class="headerlink" title="VC设备后台"></a>VC 设备后台</h3><p>vCenter Server Appliance 设备后台管理（设备管理端口是 5480）<br><a target="_blank" rel="noopener" href="https://vcsa的ip:5480/">https://vcsa 的 IP:5480/</a><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165521.png" alt="Img"></p>
+<p><em>注：此前首次安装 VCSA 发生意外报错：</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164821.png" alt="Img"><br>原因：VCSA 安装失败！原因是主机名 localhost 未被解析到 IP，未作 DNS。参考如下<br>参见：<a target="_blank" rel="noopener" href="https://blog.51cto.com/u_3701740/2521875">https://blog.51cto.com/u_3701740/2521875</a><br>          <a target="_blank" rel="noopener" href="https://blog.csdn.net/z136370204/article/details/109098506">https://blog.csdn.net/z136370204/article/details/109098506</a><br>          <a target="_blank" rel="noopener" href="https://www.miaodongla.com/dongbaike/8913.html">https://www.miaodongla.com/dongbaike/8913.html</a></p>
+<h2 id="VCSA-无DNS部署方法"><a href="#VCSA-无DNS部署方法" class="headerlink" title="VCSA   无DNS部署方法"></a>VCSA   无 DNS 部署方法</h2><p>1，前面正常安装，DNS 和 FQDN 也是写本机 IP，注意如果没有 DNS 服务器，请填写 VCSA 虚拟机 IP，不要随意填写网关或其他 IP，因为填写的 IP 不能解析第二阶段会报错导致部署失败。<br> 2，完成第 1 阶段部署，重点来了，不要直接点击 “继续”.<br>VCSA 7.0 版本系统名称使用默认 localhost ，之前 VCSA 6.7（系统名称使用默认 photon-machine）修改的方式在 VCSA 7 中不适用，需要在 VCSA 7 虚拟机下进行修改操作。VCSA 系统修改本地解析域名，<br>步骤如下：<br>       登录 VCSA 7 虚拟机，打开布署好的 VCSA 服务器控制台，按 ALT+F2 进入命令行模式，输入 shell<br>       进入命令行模式<br>       shell<br>       cat /etc/hosts   // 看到主机解析并没有对应的 IP 地址<br>       vi /etc/hosts    // 编辑<br>       192.168.2.210  localhost  // 增加 IP 地址。<br>3, 修改完后再继续第二阶段的安装<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164939.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164944.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164947.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164950.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164954.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164959.png" alt="Img"></p>
+<p><strong>总结一句话：正式环境中需要部署 VMware vCenter Server 前 需要预搭建并配置好 DNS 服务器，保证对 ESXI 以及 VC  或 VCSA 做 DNS 完全限定域名解析（FQDN），测试环境可以不做 DNS。</strong></p>
+<h2 id="DNS域名服务器搭建并给ESXI节点和vCenter-Server-配置FQDN"><a href="#DNS域名服务器搭建并给ESXI节点和vCenter-Server-配置FQDN" class="headerlink" title="DNS域名服务器搭建并给ESXI节点和vCenter Server 配置FQDN"></a>DNS 域名服务器搭建并给 ESXI 节点和 vCenter Server 配置 FQDN</h2><p>解决办法：先用 ESXI 的一台虚机 （或外部的一台物理服务器）做 DNS 服务器，充当 ESXI 节点和 VCSA 的 IP 域名解析。（优先建议用虚拟机安装 DNS 域名服务，刚开始的那第一台虚拟机最适用）<br>以下是以一台外部物理服务器搭建 DNS 为例。DNS ：192.168.2.123<br>步骤如下：<br>1、部署 DNS 服务器角色与功能<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165044.png" alt="Img"></p>
+<p>2、创建正向和反向的解析区域<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165053.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165056.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165100.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165104.png" alt="Img"></p>
+<p>3、新建（正反向）主机解析<br>ESXI 节点和本地 DNS 服务器的域名解析<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165114.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165136.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165140.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165143.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165147.png" alt="Img"></p>
+<p>4、预配置 Vcenter server 的 FQDN<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165200.png" alt="Img"></p>
+<p>5、配置 ESXI 节点的主机名以及指定 DNS<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165212.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165216.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165219.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165223.png" alt="Img"></p>
+<h2 id="激活VC"><a href="#激活VC" class="headerlink" title="激活VC"></a>激活 VC</h2><p>激活工具激活（见网盘）</p>
+<h2 id="排错"><a href="#排错" class="headerlink" title="排错"></a>排错</h2><ul>
+<li>网页访问 vCenter Server 时出现 no healthy upstream 的解决方法<br>参见：<a target="_blank" rel="noopener" href="https://blog.51cto.com/wangchunhai/4907250">https://blog.51cto.com/wangchunhai/4907250</a><br>报错如下：<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165610.png" alt="Img"><br>对于 “no healthy upstream” 的错误提示，可能的原因有以下几种。</li>
+</ul>
+<p>（1）vCenter Server 部分服务没有运行，或者运行出现错误。<br>（最常见的错误，比如非正常关机导致再次开机时部分服务未开启成功）</p>
+<p>（2）vCenter Server 所设置的 DNS 服务器出现错误。</p>
+<p>（3）vCenter Server 本地 hosts 文件配置错误。<br>（1）步骤：<br>登录 vCenter Server 后台管理界面（ <a href="https://vcip或域名:5480），在“服务”中查看“启动类型”为“自动”的服务的运行状况是否是“正常”，如果状态为“停止”或“运行正常，但出现警告”的，应选中对应的服务，启动已经停止的服务，或者重新启动出现警告的服务">https://vcip 或域名：5480），在 “服务” 中查看 “启动类型” 为 “自动” 的服务的运行状况是否是 “正常”，如果状态为 “停止” 或 “运行正常，但出现警告” 的，应选中对应的服务，启动已经停止的服务，或者重新启动出现警告的服务</a><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165619.png" alt="Img"><br>一般情况下，如果能登录进入服务端口为 5480 的后台管理界面，在启动或重新启动相关的服务后，vCenter Server 的管理就可以恢复正常。<br>vCenter 进入 shell 命令模式步骤<br>打开 VC 虚机的控制台，按 F2 进入后如下图 1，在里面将 BASH Shell 设置为 Enabled<br>按 ALT+F2 进入命令行模式<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165631.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165636.png" alt="Img"><br>重新引导系统重启后，在命令行界面输入 shell，OK<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165645.png" alt="Img"></p>
+<h1 id="配置管理-vSphere-vCtener"><a href="#配置管理-vSphere-vCtener" class="headerlink" title="配置管理 vSphere vCtener"></a>配置管理 vSphere vCtener</h1><h2 id="初始化基础配置"><a href="#初始化基础配置" class="headerlink" title="初始化基础配置"></a>初始化基础配置</h2><h3 id="新建数据中心"><a href="#新建数据中心" class="headerlink" title="新建数据中心"></a>新建数据中心</h3><h4 id="新建集群"><a href="#新建集群" class="headerlink" title="新建集群"></a>新建集群</h4><p>使用 VM 的高级功能则需要新建集群，不使用高级功能可不建集群</p>
+<h5 id="添加主机"><a href="#添加主机" class="headerlink" title="添加主机"></a>添加主机</h5><p>VCSA 所在的主机可不在其关机的状态下直接加入新建的集群，忽略告警，其它主机请先进入维护模式再添加主机<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165938.png" alt="Img"></p>
+<h5 id="快速入门配置"><a href="#快速入门配置" class="headerlink" title="快速入门配置"></a>快速入门配置</h5><ul>
+<li>选定服务</li>
+<li>维护模式</li>
+<li>时间同步（生产环境建议配置 NTP 服务）</li>
+<li>管理网络<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170007.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170010.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170013.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170015.png" alt="Img"></li>
+</ul>
+<h4 id="创建管理网络"><a href="#创建管理网络" class="headerlink" title="创建管理网络"></a>创建管理网络</h4><h5 id="新建分布式交换机"><a href="#新建分布式交换机" class="headerlink" title="新建分布式交换机"></a>新建分布式交换机</h5><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170106.png" alt="Img"></p>
+<h5 id="添加主机-1"><a href="#添加主机-1" class="headerlink" title="添加主机"></a>添加主机</h5><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170132.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170136.png" alt="Img"></p>
+<h5 id="新建分布式端口组"><a href="#新建分布式端口组" class="headerlink" title="新建分布式端口组"></a>新建分布式端口组</h5><p>集群环境下，建议后续所有的虚拟机业务网卡流量统一全部连接分布式端口组上<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170752.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170756.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170802.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170806.png" alt="Img"></p>
+<p><strong>DSwitch 分布式交换机的理解（重点）</strong><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170828.png" alt="Img"><br><strong>DSwitch 上做 LACP 链路聚合组（重点）</strong></p>
+<h5 id="创建链路聚合组"><a href="#创建链路聚合组" class="headerlink" title="创建链路聚合组"></a>创建链路聚合组</h5><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170916.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170920.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170923.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170926.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170929.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170932.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170936.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170939.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170942.png" alt="Img"></p>
+<h4 id="管理主机网络"><a href="#管理主机网络" class="headerlink" title="管理主机网络"></a>管理主机网络</h4><p>可选项，比如需要将物理适配器做 LACP 链路聚合时使用<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171008.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171013.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171016.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171019.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171023.png" alt="Img"></p>
+<h4 id="创建集群存储"><a href="#创建集群存储" class="headerlink" title="创建集群存储"></a>创建集群存储</h4><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171047.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171050.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171053.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171056.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171059.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171102.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171105.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171108.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171111.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171118.png" alt="Img"></p>
+<h2 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h2><p>略。。。。。</p>
+<h3 id="虚拟机模板"><a href="#虚拟机模板" class="headerlink" title="虚拟机模板"></a>虚拟机模板</h3><p>1，转换或模板<br>直接将虚拟机转换成模板（仅在虚拟机关机下进行）<br>2，克隆为模板<br>复制虚拟机的方式产生模板，原虚拟机保留<br>3，策略和配置文件<br>虚拟机自定义规范（所谓 Windows 和 Linux 的预配置应答文件）<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171144.png" alt="Img"></p>
+<p>自定义 Windows 客户机操作系统要求 Windows 客户机操作系统中已安装 Sysprep。一定要安装 vmware tools 。<br>以转换为模板方式：<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171352.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171355.png" alt="Img"><br>以模板来创建虚拟机<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171408.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171411.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171413.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171416.png" alt="Img"></p>
+<p>后续自定义硬件根据需要修改。。。。。。。。</p>
+<p>备注：克隆虚拟机模板前需要安装 VMware Tools 工具，那样才能确保克隆后模板可以修改自定义客户机操作系统选项，Sysprep 工具虽然内嵌入高版本的 Windows 操作系统，但如果不安装 VMware Tools 则无法使用自定义操作系统选项。那样的话后续会出现计算机名、SID 重复问题。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171428.png" alt="Img"></p>
+<h3 id="Windows自定义应答配置"><a href="#Windows自定义应答配置" class="headerlink" title="Windows自定义应答配置"></a>Windows 自定义应答配置</h3><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171159.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171202.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171205.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171208.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171213.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171217.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171220.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171223.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171226.png" alt="Img"></p>
+<h3 id="Linux自定义配置应答"><a href="#Linux自定义配置应答" class="headerlink" title="Linux自定义配置应答"></a>Linux 自定义配置应答</h3><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171302.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171305.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171308.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171311.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171314.png" alt="Img"></p>
+<p><em>注意：建议创建虚拟机模板前将虚拟机上挂载的 CD 盘卸载掉，避免出现以下非必要的警告</em></p>
+<h3 id="虚拟机常用操作"><a href="#虚拟机常用操作" class="headerlink" title="虚拟机常用操作"></a>虚拟机常用操作</h3><h4 id="启用热插拔"><a href="#启用热插拔" class="headerlink" title="启用热插拔"></a>启用热插拔</h4><p>注意：<br>虚拟机的 CPU 和内存默认情况下是未开启热插拔状态。<br>虚拟机如果需要开启 FT 高级容错功能则不能开启热插拔<br>根据实际需要建议创建虚拟机前开启热插拔或关闭虚拟机后手动开启热插拔选项。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171618.png" alt="Img"></p>
+<h4 id="添加虚拟机到原始存储（LUN）的映射（RDM）"><a href="#添加虚拟机到原始存储（LUN）的映射（RDM）" class="headerlink" title="添加虚拟机到原始存储（LUN）的映射（RDM）"></a>添加虚拟机到原始存储（LUN）的映射（RDM）</h4><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171626.png" alt="Img"><br>注：对象存储必须是 LUN 类型的共享存储，如：SCSI ,FC 等类型的存储对象<br>以下以连接 Windows 服务器搭建的 iSCSI 存储为例：<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171635.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171639.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171644.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171648.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171651.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171654.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171659.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171704.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171709.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171735.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171738.png" alt="Img"><br><em>以上操作未成功，原因是 iSCSI 目标服务器的存储接口是 SATA，而非 SCIS 存储类型，无法建立连接。</em></p>
+<h2 id="VCSA虚机系统备份与还原"><a href="#VCSA虚机系统备份与还原" class="headerlink" title="VCSA虚机系统备份与还原"></a>VCSA 虚机系统备份与还原</h2><p>（备份目标：VM 虚拟平台外的其它服务器）<br>NFS 服务器做备份目标，端口 2049<br>备份<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171927.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171931.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171935.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171938.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171943.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171947.png" alt="Img"></p>
+<h1 id="vSphere-高级功能应用阶段"><a href="#vSphere-高级功能应用阶段" class="headerlink" title="vSphere 高级功能应用阶段"></a>vSphere 高级功能应用阶段</h1><h2 id="vMotion（热迁移）"><a href="#vMotion（热迁移）" class="headerlink" title="vMotion（热迁移）"></a>vMotion（热迁移）</h2><p>先决条件：<br>分布式虚拟交换机<br>VMkernel 适配器网络配置（静态或动态 IP，具体视实际场景）<br>vMotion 服务已开启<br>网络可达<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172018.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172020.png" alt="Img"></p>
+<p><em>第一次测试热迁移虚拟机出现报错：</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172035.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172040.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172044.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172047.png" alt="Img"><br>解决方法：检查物理服务器 ESXI 主机上的网卡或者线路是否正常可用<br>开始迁移：<br>以计算与存储均迁移为例<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172101.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172104.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172107.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172110.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172113.png" alt="Img"></p>
+<p>完成！</p>
+<h2 id="VC集成域认证登录"><a href="#VC集成域认证登录" class="headerlink" title="VC集成域认证登录"></a>VC 集成域认证登录</h2><p>重点，如何去活动目录服务器（ldap AD）查找标识源名，    distinguishedName 标识名<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172130.png" alt="Img"><br>添加活动目录到 vCenter Server<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172219.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172223.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172226.png" alt="Img"><br>随时同步 LDAP 数据库信息（新建麻子，maz）<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172235.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172238.png" alt="Img"><br>找到对应的管理员组并将域内账户加入其中。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172246.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172249.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172253.png" alt="Img"></p>
+<h2 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172342.png" alt="Img"><br><em>检查 VMKernel 管理网络配置是否正常，以及对应的服务是否启用</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172353.png" alt="Img"><br>!!!!!<br>原因是集群上不存在 SAN 存储设备，比如:iSCSI、光纤通道存储等 SAN 存储<br>故此 FT，HA，DRS 等高级功能使用不了<br>!!!!</p>
+<h2 id="DRS-分布式资源调度"><a href="#DRS-分布式资源调度" class="headerlink" title="DRS(分布式资源调度)"></a>DRS (分布式资源调度)</h2><p>。。。。</p>
+<h2 id="FT（容错）"><a href="#FT（容错）" class="headerlink" title="FT（容错）"></a>FT（容错）</h2><p>注意：开启 FT，要求虚拟机不能开启热插拔<br>。。。。</p>
+<h2 id="VDP-备份恢复虚拟机"><a href="#VDP-备份恢复虚拟机" class="headerlink" title="VDP(备份恢复虚拟机)"></a>VDP (备份恢复虚拟机)</h2><p>先决条件：<br>提前下载好 VDP 的 OVF 模板至本地<br>注：提前做 VDP 的 DNS 域名解析（否则会报错，见下）<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172457.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172500.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172503.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172506.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172509.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172512.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172515.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172519.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172522.png" alt="Img"></p>
+<p>给 VDP 虚机按照 VM tools 工具，然后重启下<br>默认账号密码：root /changeme<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172532.png" alt="Img"><br><em>报错分析：未对 VDP 做 DNS 域名解析，因为部署 VDP 过程会使用到 DNS。</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172547.png" alt="Img"><br>重新部署 VDP 模板虚机<br>完后还是还是上面的报错，故此怀疑是本地 OVF 模板的问题可能，具体待定。。。。。</p>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><h2 id="主机USB与USB控制器区别"><a href="#主机USB与USB控制器区别" class="headerlink" title="主机USB与USB控制器区别"></a>主机 USB 与 USB 控制器区别</h2><p>注：虚拟机上添加 “主机 USB 设备” 前必须保证其所在的 ESXI 主机上插入了 USB 设备，否则提示 “无任何可用设备”<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172843.png" alt="Img"></p>
+<h2 id="上传镜像到-Vsphere中心失败，解决方法"><a href="#上传镜像到-Vsphere中心失败，解决方法" class="headerlink" title="上传镜像到 Vsphere中心失败，解决方法"></a>上传镜像到 Vsphere 中心失败，解决方法</h2><p><strong>换 360 浏览器</strong><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172904.png" alt="Img"></p>
+<h2 id="Esxi主机内存扩容"><a href="#Esxi主机内存扩容" class="headerlink" title="Esxi主机内存扩容"></a>Esxi 主机内存扩容</h2><p>虚拟化平台：<br>三台 ESXI 主机 + 两台存储<br>一台戴尔服务器，两台联想服务器，两台联想存储，光纤 FC 通道连接</p>
+<p>准备步骤：<br>1，上面所有的虚拟机正常关机<br>2，访问将 VCSA 或 VC 所在的 ESXI 主机上，将 VCSA 或 VC 虚拟机关机（注意：请一定要在 ESXI 主机上 先将 VCSA 关机，然后再 ESXI 主机关机）<br>3，主机进入维护模式前，如果开启了  HA 和 DRS 高级功能  ，请务必将其停用后   。再将所有的 Esxi 主机进入维护模式，然后关机   （否则一主机进入维护模式后，其上的虚拟机将会 DRS 迁移到别的主机上，造成虚拟机资源集中化问题）<br>4，内存扩容完毕。（重点：请务必提前确保服务器上的网线，光纤等标记好端口位置，便以恢复原状）<br>5，服务器开机，esxi 开机正常并启动服务<br>6，服务各个 Esxi 主机，退出维护模式<br>7，给 VCSA 或 VC 虚拟机开机<br>8，访问 VCSA 或 VC  ，给虚拟机服务器逐个开机</p>
+<h2 id="域控在虚拟化中的注意点"><a href="#域控在虚拟化中的注意点" class="headerlink" title="域控在虚拟化中的注意点"></a>域控在虚拟化中的注意点</h2><p>1，公司所有业务服务器均为虚拟机上。其中域控服务器也是，然后公司奇安信行为管理  上启用了 客户端电脑  windows 集成认证（客户端加域）     来上网认证。  故此在 ESXI 主机关机及进入维护模式期间，域控是关机停服状态  。故此当客户端电脑域账号登录后无法正常上网！<br>解决方法：行为管理提前给客户端电脑网段加白名单。或请合理安排作业时间</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="VCSA关机和esxi进入维护模式顺序错误"><a href="#VCSA关机和esxi进入维护模式顺序错误" class="headerlink" title="VCSA关机和esxi进入维护模式顺序错误"></a>VCSA 关机和 esxi 进入维护模式顺序错误</h2><p>作业完成后虚拟机开机过程引导报错：<br>OA_DB 泛微 OA 数据库服务器虚拟机开机引导报错如下：<br>error: file /initramfs-3.10.0-1160.102.1.el7.x86_64.img’ not found.<br>/boot 系统启动文件丢失导致开机启动失败<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173138.png" alt="Img"><br>解决方法：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011775882/article/details/115367352">https://blog.csdn.net/u011775882/article/details/115367352</a><br>适用于处理任何 /boot 目录下的文件丢失问题<br>{  故障现象</p>
+<p>主机启动失败，提示 error: file ‘/initramfs-3.10.0-957.el7.x86_64.img’ not found。如下图：<br>在这里插入图片描述<br>2. 处理思路</p>
+<p>光驱启动进入系统救援模式，确认 /boot 目录下 initramfs-3.10.0-957.el7.x86_64.img 文件是否存在。<br>如文件不存在，直接从步骤 8 开始执行.<br>如文件存在，则可能文件已经损坏。/boot 目录下创建 bak 子目录，mv 原文件至 bak 目录下。<br>挂载系统镜像文件（系统 iso 文件），进入软件包所处目录，通过 rpm 方式强制重装内核软件包。/boot 目录下任何文件丢失均可以使用该方法处理。<br>重装内核完成后，检查 /boot 目录下是否生成 initramfs-3.10.0-957.el7.x86_64.img。确认文件已生成，重启操作系统，故障解决。<br>略。。<br>3. 处理步骤</p>
+<p>1. 挂载 iso 镜像文件，重启主机，通过光驱启动。（如不熟悉该步骤，请自行查阅文档）<br>2. 进入系统安装界面，按上下键，选择 Troubleshooting 后回车。<br>在这里插入图片描述<br>3. 选择 Rescue a Centos system 回车<br>在这里插入图片描述</p>
+<p>4. 救援环境尝试挂载 linux 根文件系统到 /mnt/sysimage，选 1 回车，再回车。<br>在这里插入图片描述 5. 根据上图提示，执行 chroot /mnt/sysimage 命令，切换至根目录模式，确认 initramfs-3.10.0-957.el7.x86_64.img 文件是否存在。</p>
+<p>sh 4.2#chroot /mnt/sysimage<br>bash-4.2#cd /boot<br>bash-4.2#ls -l initramfs-3.10.0-957.el7.x86_64.img</p>
+<p>6. 如文件存在，需要先移动至 bak 目录。如文件不存在，跳过步骤 6.</p>
+<p>bash-4.2# cd /boot<br>bash-4.2#mkdir bak<br>bash-4.2#mv initramfs-3.10.0-957.el7.x86_64.img bak</p>
+<p>7. 执行 mount 命令，将光驱重新挂载至 /mnt 目录，然后切换至系统软件包所在目录，列出 kernel 相关软件包。<br>在这里插入图片描述 8. 执行 rpm 命令强制安装 kernel 软件包，此处注意–force 选项是必须的。</p>
+<p>在这里插入图片描述<br>9.kernel 软件包重装完成后，查看 /boot 目录下是否有新的 initramfs 文件生成。<br>在这里插入图片描述 10. 重启主机，操作系统恢复正常。</p>
+<p>在这里插入图片描述<br>本文描述的方法适用于处理任何 /boot 目录下的文件丢失问题  }</p>
+<h2 id="虚拟机的网络适配器即网卡类型区别"><a href="#虚拟机的网络适配器即网卡类型区别" class="headerlink" title="虚拟机的网络适配器即网卡类型区别"></a>虚拟机的网络适配器即网卡类型区别</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173206.png" alt="Img"></p>
+<h2 id="VMware-Converte-官方P2V转换工具"><a href="#VMware-Converte-官方P2V转换工具" class="headerlink" title="VMware_Converte 官方P2V转换工具"></a>VMware_Converte 官方 P2V 转换工具</h2><p>官方工具：<a target="_blank" rel="noopener" href="https://docs.vmware.com/en/vCenter-Converter-Standalone/index.html">https://docs.vmware.com/en/vCenter-Converter-Standalone/index.html</a></p>
+<h2 id="关于VC的许可证添加注意事项"><a href="#关于VC的许可证添加注意事项" class="headerlink" title="关于VC的许可证添加注意事项"></a>关于 VC 的许可证添加注意事项</h2><p>在部署完 VC 后请务必第一时间（正式添加 esxi 主机，集群前）就必须把默认的评估许可证替换下来。否则请断开移除所有主机，集群，然后按以下步骤重新操作。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173258.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173301.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173304.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173309.png" alt="Img"></p>
+<h1 id="资源分享"><a href="#资源分享" class="headerlink" title="资源分享"></a>资源分享</h1><p>通过网盘分享的文件：ESXi and vCenter Server 文档<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1FAFwt31UIDHwdgfRN3bheQ">https://pan.baidu.com/s/1FAFwt31UIDHwdgfRN3bheQ</a> 提取码: ewa5<br>通过网盘分享的文件：keygen (已破解).rar<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1xn-UD2LtiRrHtqFmwhQ-JA">https://pan.baidu.com/s/1xn-UD2LtiRrHtqFmwhQ-JA</a> 提取码: i84i<br>通过网盘分享的文件：VMware-VCSA-all-7.0.3-22837322.iso<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1Qpe94TN0CxrZFBs8AljeIQ">https://pan.baidu.com/s/1Qpe94TN0CxrZFBs8AljeIQ</a> 提取码: z1qs<br>通过网盘分享的文件：VMware-VMvisor-Installer-7.0U3n-21930508.x86_64.iso<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1Zz5jHgCuSKq9R39TIMAROA">https://pan.baidu.com/s/1Zz5jHgCuSKq9R39TIMAROA</a> 提取码: unqw</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <span class="social-link">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </span>
+
+          <img class="social-item-img" src="/images/wechat_channel.jpg">
+      </div>
+  </div>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/05/13/Mysql%E7%AC%94%E8%AE%B0/" rel="prev" title="Mysql 笔记">
+                  <i class="fa fa-angle-left"></i> Mysql 笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="SOHUCS" sid="26778dfedb5ab1e26cbcd5e2a6e255ae"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Fangxz</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">21k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:17</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyxTsqYtv","appkey":"23b85cbf5cc872c60b4232b1720e4deb","count":true}</script>
+<script src="/js/third-party/comments/changyan.js" defer></script>
+
+</body>
+</html>

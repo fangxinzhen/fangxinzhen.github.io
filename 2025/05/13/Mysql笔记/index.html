@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本篇主要是结合黑马程序员的 B 站学习视频和手册以及个人 Mysql 的学习笔记部分提取组成，大部分是基于重点摘要和复习角度来记录。涉及内容：基础篇、高级篇、运维篇百度网盘资源分享见篇尾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql 笔记">
+<meta property="og:url" content="http://example.com/2025/05/13/Mysql%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Fangxz&#39;Blogs">
+<meta property="og:description" content="本篇主要是结合黑马程序员的 B 站学习视频和手册以及个人 Mysql 的学习笔记部分提取组成，大部分是基于重点摘要和复习角度来记录。涉及内容：基础篇、高级篇、运维篇百度网盘资源分享见篇尾">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113507.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113510.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113813.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113909.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113915.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513115414.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513120106.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142325.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142901.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142916.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142928.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142957.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143000.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143009.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143013.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143017.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143024.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143029.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143122.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142425.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142428.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142432.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142554.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143510.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143641.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143730.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143836.png">
+<meta property="og:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143840.png">
+<meta property="article:published_time" content="2025-05-13T02:41:59.000Z">
+<meta property="article:modified_time" content="2025-05-13T06:45:33.185Z">
+<meta property="article:author" content="Fangxz">
+<meta property="article:tag" content="方信镇, 个人博客, 记录,生活,学习,笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113507.png">
+
+
+<link rel="canonical" href="http://example.com/2025/05/13/Mysql%E7%AC%94%E8%AE%B0/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2025/05/13/Mysql%E7%AC%94%E8%AE%B0/","path":"2025/05/13/Mysql笔记/","title":"Mysql 笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Mysql 笔记 | Fangxz'Blogs</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js" defer></script>
+  <script async src="https://hm.baidu.com/hm.js?475b386414974d18a03f7b3e29226e33"></script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"0H5NvXonej8W1o8nQJgJeF0D-gzGzoHsz","app_key":"YJ6l8fYyuouqvj1neakqXFZT","server_url":"https://0h5nvxon.lc-cn-n1-shared.com","security":true}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Fangxz'Blogs</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录美好生活与学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-运维"><a href="/categories/%E8%BF%90%E7%BB%B4/" rel="section"><i class="fa fa-cogs fa-fw"></i>运维</a></li><li class="menu-item menu-item-虚拟化"><a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" rel="section"><i class="fa fa-clone fa-fw"></i>虚拟化</a></li><li class="menu-item menu-item-windows|linux"><a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="section"><i class="fa fa-linux fa-fw"></i>Windows|Linux</a></li><li class="menu-item menu-item-系统|服务"><a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" rel="section"><i class="fa fa-server fa-fw"></i>系统|服务</a></li><li class="menu-item menu-item-趣闻"><a href="/categories/%E8%B6%A3%E9%97%BB/" rel="section"><i class="fa fa-newspaper fa-fw"></i>趣闻</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%AF%87"><span class="nav-number">1.</span> <span class="nav-text">基础篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">MySQL 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.1.</span> <span class="nav-text">数据库相关概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.1.2.</span> <span class="nav-text">MySQL 数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.3.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#YUM%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">YUM 仓库安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">源代码安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">二进制包安装</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL"><span class="nav-number">1.2.</span> <span class="nav-text">SQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL%E9%80%9A%E7%94%A8%E8%AF%AD%E6%B3%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">SQL 通用语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL%E5%88%86%E7%B1%BB"><span class="nav-number">1.2.2.</span> <span class="nav-text">SQL 分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%95%8C%E9%9D%A2%E5%B7%A5%E5%85%B7"><span class="nav-number">1.2.3.</span> <span class="nav-text">图形化界面工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">安装与使用</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E7%AF%87"><span class="nav-number">2.</span> <span class="nav-text">运维篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">2.1.</span> <span class="nav-text">主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.1.1.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.1.2.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%8E%92%E9%94%99"><span class="nav-number">2.1.3.</span> <span class="nav-text">常见排错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">2.1.4.</span> <span class="nav-text">扩展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD"><span class="nav-number">2.2.</span> <span class="nav-text">备份</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%A4%87%E4%BB%BD"><span class="nav-number">2.2.1.</span> <span class="nav-text">逻辑备份</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%A4%87%E4%BB%BD"><span class="nav-number">2.2.2.</span> <span class="nav-text">文件系统备份</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="nav-number">2.3.</span> <span class="nav-text">读写分离</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Amoeba-For-Mysql"><span class="nav-number">2.3.1.</span> <span class="nav-text">Amoeba For Mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mycat%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="nav-number">2.3.2.</span> <span class="nav-text">Mycat 数据库分库分表中间件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mycat"><span class="nav-number">2.4.</span> <span class="nav-text">mycat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B%E5%8F%8A%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE"><span class="nav-number">2.4.1.</span> <span class="nav-text">简介及安装及配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mycat%E9%83%A8%E7%BD%B2%E5%8D%B3%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB%E5%AE%9E%E6%88%98"><span class="nav-number">2.4.2.</span> <span class="nav-text">mycat 部署即读写分离实战</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E5%88%86%E4%BA%AB"><span class="nav-number">3.</span> <span class="nav-text">资源分享</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Fangxz"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Fangxz</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fangxinzhen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fangxinzhen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xinzhen_fang@126.com" title="E-Mail → mailto:xinzhen_fang@126.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/05/13/Mysql%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Fangxz">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fangxz'Blogs">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Mysql 笔记 | Fangxz'Blogs">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mysql 笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-13 10:41:59 / 修改时间：14:45:33" itemprop="dateCreated datePublished" datetime="2025-05-13T10:41:59+08:00">2025-05-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">系统服务</span></a>
+        </span>
+    </span>
+
+  
+    <span id="/2025/05/13/Mysql%E7%AC%94%E8%AE%B0/" class="post-meta-item leancloud_visitors" data-flag-title="Mysql 笔记" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="Mysql 笔记" href="/2025/05/13/Mysql%E7%AC%94%E8%AE%B0/#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::840c2723ab3348dff5ff5d73cd9809a7" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本篇主要是结合黑马程序员的 B 站学习视频和手册以及个人 Mysql 的学习笔记部分提取组成，大部分是基于重点摘要和复习角度来记录。<br>涉及内容：基础篇、高级篇、运维篇<br><em>百度网盘资源分享见篇尾</em></p>
+<span id="more"></span>
+<h1 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h1><h2 id="MySQL概述"><a href="#MySQL概述" class="headerlink" title="MySQL概述"></a>MySQL 概述</h2><h3 id="数据库相关概念"><a href="#数据库相关概念" class="headerlink" title="数据库相关概念"></a>数据库相关概念</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>全称</th>
+<th>简称</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据库</td>
+<td>存储数据的仓库，数据是有组织的进行存储</td>
+<td> DataBase（DB）</td>
+</tr>
+<tr>
+<td>数据库管理系统</td>
+<td>操纵和管理数据库的大型软件</td>
+<td> DataBase ManagementSystem</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td> 操作关系型数据库的编程语言，定义了一套操作关系型数据库统一标准</td>
+<td> Structured QueryLanguage (SQL)</td>
+</tr>
+</tbody></table>
+<h3 id="MySQL数据库"><a href="#MySQL数据库" class="headerlink" title="MySQL数据库"></a>MySQL 数据库</h3><p><strong>官方</strong>： <a target="_blank" rel="noopener" href="https://www.mysql.com/">https://www.mysql.com/</a><br>MySQL 官方提供了两种不同的版本：<br>社区版本（MySQL Community Server）<br>免费， MySQL 不提供任何技术支持<br>商业版本（MySQL Enterprise Edition）<br>收费，可以使用 30 天，官方提供技术支持</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装 mysql 前，必须检查之前是否安装过，如果有则卸载掉，并删除所有可能的文件<br>/etc/my.       /var/lib/mysql 等路径下的文件</p>
+<h4 id="YUM仓库安装"><a href="#YUM仓库安装" class="headerlink" title="YUM仓库安装"></a>YUM 仓库安装</h4><p><em>参考文档：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/linux-installation-yum-repo.html">https://dev.mysql.com/doc/refman/8.4/en/linux-installation-yum-repo.html</a></em><br><em> 安装包下载：<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/repo/yum/">https://dev.mysql.com/downloads/repo/yum/</a>   （选择指定的系统兼容版本）</em><br><strong>优先使用这种方式安装</strong><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113507.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113510.png" alt="Img"></p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# wget <span class="attr">https</span>:<span class="comment">//dev.mysql.com/get/mysql84-community-release-el9-1.noarch.rpm</span></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# yum localinstall mysql84-community-release-el9-<span class="number">1.</span>noarch.<span class="property">rpm</span></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# rpm -q mysql84-community-release-el9-<span class="number">1.</span>noarch</span><br><span class="line">mysql84-community-release-el9-<span class="number">1.</span>noarch</span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# ls</span><br><span class="line">epel-modular.<span class="property">repo</span>  epel-testing-modular.<span class="property">repo</span>  epel-testing.<span class="property">repo</span>  mysql-community-debuginfo.<span class="property">repo</span>  mysql-community.<span class="property">repo</span>  mysql-community-source.<span class="property">repo</span>  redhat.<span class="property">repo</span></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]#</span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# yum repolist enabled | grep mysql.*-community</span><br><span class="line">mysql-<span class="number">8.4</span>-lts-community          <span class="title class_">MySQL</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> <span class="title class_">Community</span> <span class="title class_">Server</span></span><br><span class="line">mysql-connectors-community       <span class="title class_">MySQL</span> <span class="title class_">Connectors</span> <span class="title class_">Community</span></span><br><span class="line">mysql-tools-<span class="number">8.4</span>-lts-community    <span class="title class_">MySQL</span> <span class="title class_">Tools</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> <span class="title class_">Community</span></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# yum repolist all | grep mysql</span><br><span class="line">mysql-<span class="number">8.4</span>-lts-community                                       <span class="title class_">MySQL</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> 启用</span><br><span class="line">mysql-<span class="number">8.4</span>-lts-community-debuginfo                             <span class="title class_">MySQL</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> 禁用</span><br><span class="line">mysql-<span class="number">8.4</span>-lts-community-source                                <span class="title class_">MySQL</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> 禁用</span><br><span class="line">mysql-cluster-<span class="number">8.0</span>-community                                   <span class="title class_">MySQL</span> <span class="title class_">Cluster</span> 禁用</span><br><span class="line">mysql-cluster-<span class="number">8.0</span>-community-debuginfo                         <span class="title class_">MySQL</span> <span class="title class_">Cluster</span> 禁用</span><br><span class="line">mysql-cluster-<span class="number">8.0</span>-community-source                            <span class="title class_">MySQL</span> <span class="title class_">Cluster</span> 禁用</span><br><span class="line"></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>           （安装想要的版本，否则默认是最新版本）</span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# systemctl enable mysqld --now</span><br><span class="line">####</span><br><span class="line">如果 您的平台支持 yum-config-manager 或 <span class="variable constant_">DNF</span> config-manager 命令，您可以通过发出 以下命令禁用 <span class="number">8.4</span> 系列，并启用一个 <span class="number">8.0</span>系列：</span><br><span class="line"></span><br><span class="line">$&gt; sudo yum-config-manager --disable mysql-<span class="number">8.4</span>-lts-community</span><br><span class="line">$&gt; sudo yum-config-manager --enable  mysql80-community </span><br><span class="line">找到启用或禁用对应的mysql仓库</span><br><span class="line">####</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="源代码安装"><a href="#源代码安装" class="headerlink" title="源代码安装"></a>源代码安装</h4><p><em>参见：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/source-installation.html">https://dev.mysql.com/doc/refman/8.4/en/source-installation.html</a></em><br><em> 下载：<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a></em><br><strong> 需要提前安装好编译工具 make,cmake,gcc 等</strong><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113813.png" alt="Img"></p>
+<h4 id="二进制包安装"><a href="#二进制包安装" class="headerlink" title="二进制包安装"></a>二进制包安装</h4><p><em>参见：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/binary-installation.html">https://dev.mysql.com/doc/refman/8.4/en/binary-installation.html</a></em><br><em> 下载：<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a></em><br><strong> 二进制安装包默认需要自行解决安装依赖，不建议使用这种方式</strong><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113909.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113915.png" alt="Img"></p>
+<h2 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a>SQL</h2><p>全称 Structured Query Language，结构化查询语言。操作关系型数据库的编程语言，定义了一套操作关系型数据库统一标准 。</p>
+<h3 id="SQL通用语法"><a href="#SQL通用语法" class="headerlink" title="SQL通用语法"></a>SQL 通用语法</h3><ul>
+<li>SQL 语句可以单行或多行书写，以分号结尾。</li>
+<li>SQL 语句可以使用空格 / 缩进来增强语句的可读性。</li>
+<li>MySQL 数据库的 SQL 语句不区分大小写，关键字建议使用大写。</li>
+<li>注释：<br>   单行注释：– 注释内容 或 # 注释内容<br>   多行注释：/* 注释内容 */</li>
+</ul>
+<h3 id="SQL分类"><a href="#SQL分类" class="headerlink" title="SQL分类"></a>SQL 分类</h3><p>SQL 语句，根据其功能，主要分为四类：DDL、DML、DQL、DCL。</p>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>全称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> DDL</td>
+<td>Data DefinitionLanguage</td>
+<td> 数据定义语言，用来定义数据库对象 (数据库，表，字段)</td>
+</tr>
+<tr>
+<td>DML</td>
+<td>Data Manipulation Language</td>
+<td> 数据操作语言，用来对数据库表中的数据进行增删改</td>
+</tr>
+<tr>
+<td> DQL</td>
+<td>Data Query Language</td>
+<td> 数据查询语言，用来查询数据库中表的记录</td>
+</tr>
+<tr>
+<td> DCL</td>
+<td>Data Control Language</td>
+<td> 数据控制语言，用来创建数据库用户、控制数据库的访问权限</td>
+</tr>
+</tbody></table>
+<p><strong>总结：DDL 是针对数据库、表、字段；DML 是针对表里边的真实数据内容的增删改（记住不包括查询）；DQL 是只针对表的查询；DCL 是针对数据库系统中的 数据库、用户、权限</strong></p>
+<h3 id="图形化界面工具"><a href="#图形化界面工具" class="headerlink" title="图形化界面工具"></a>图形化界面工具</h3><p><em>古语有云：</em><br><em>工欲善其事必先利其器</em><br><em>磨刀不误砍柴工</em><br>我们在日常的开发中，会借助于 MySQL 的图形化界面，来简化开发，提高开发效率。而目前 mysql 主流的图形化界面工具，有以下几种：<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513115414.png" alt="Img"><br><strong>对我而言起初用得是 Navicat 工具，但是后面转向了 DataFrip 工具，就一个词：“比 Navicat 好用，信不信由你”<br>想要 DataGrip 的 PJ 版本，评论区留言分享全家桶给你！</strong></p>
+<h4 id="安装与使用"><a href="#安装与使用" class="headerlink" title="安装与使用"></a>安装与使用</h4><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513120106.png" alt="Img"></p>
+<h1 id="运维篇"><a href="#运维篇" class="headerlink" title="运维篇"></a>运维篇</h1><h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p><em>参考文档：<a target="_blank" rel="noopener" href="https://blog.csdn.net/q2524607033/article/details/133197100">https://blog.csdn.net/q2524607033/article/details/133197100</a></em><br>选择 mysql-community-server 8.4.4 版本测试（注意版本不同其某些命令可能被更新或弃用）<br>测试环境：一主一从</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142325.png" alt="Img"></p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>重点事项<br>1，二进制日志文件：这个文件是 mysql 数据库修改或更新后产生的 SQL 数据，以二进制来存储<br>2，bin_log  &amp;  Position：主从复制的基准是  以二进制日志文件及偏移  为起始来开始复制。相当于 对于从数据库而言，从主数据库复制过来的 SQL 都是 ‘Position 偏移’ 之后的内容，如果其中内容涉及到偏移之前的 SQL，那么可能就会复制失败，因为数据不一致（主有从没有）。<br>所以一般两种复制情况：<br>1，主 和 从数据库都是干净的，都是刚初始化 mysql 的，二者都不一样数据完全一致<br>2，主数据库之前存在旧数据库，然后才开始部署从数据库来做主从复制。<br>      建议将主数据库所有（或目标）数据库备份并恢复到从数据库中保证复制作业前，主从数据库一致性<br>      主：  flush tables with read lock ;     （加全局锁）<br>               mysqldump -uroot -p –all-databases –add-drop-database &gt; xxx.sql<br>      从： mysql -uroot -p   (进入交互界面才能用 source)<br>              source xxx.sql<br>             change replication source to xxxx;<br>             rm -rf mysql-slave-relay-bin.xxxxx  (可选：删除之前的中继二进制日志文件)<br>             reset replica  (可选：重置主从复制作业环境)<br>      主从：systemctl restart mysqld<br>3，查询当前主数据库二进制日志状态：SHOW BINARY LOG STATUS;   （8.4.4 版本）<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142901.png" alt="Img"><br>4，从数据库节点连接主数据库配置副本连接信息：<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142916.png" alt="Img"><br>5，从数据库开始数据库复制作业：start replica ;<br>       注：需要重新主从复制作业请先暂停复制：stop replica ;<br>6，查看从数据库复制作业的状态：show replica status\G;<br>7，主从复制正常状态的对比：如下<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142928.png" alt="Img"></p>
+<h3 id="常见排错"><a href="#常见排错" class="headerlink" title="常见排错"></a>常见排错</h3><p>1，删除从数据库的中继二进制日志文件<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142957.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143000.png" alt="Img"><br>2，重置 reset replica  作业<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143009.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143013.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143017.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143024.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143029.png" alt="Img"></p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143122.png" alt="Img"></p>
+<h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><h3 id="逻辑备份"><a href="#逻辑备份" class="headerlink" title="逻辑备份"></a>逻辑备份</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142425.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142428.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142432.png" alt="Img"></p>
+<h3 id="文件系统备份"><a href="#文件系统备份" class="headerlink" title="文件系统备份"></a>文件系统备份</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142554.png" alt="Img"></p>
+<h2 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h2><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143510.png" alt="Img"></p>
+<h3 id="Amoeba-For-Mysql"><a href="#Amoeba-For-Mysql" class="headerlink" title="Amoeba For Mysql"></a>Amoeba For Mysql</h3><p>参考链接：<a target="_blank" rel="noopener" href="https://amoeba.sourceforge.net/doc/index.htm">https://amoeba.sourceforge.net/doc/index.htm</a></p>
+<h3 id="Mycat数据库分库分表中间件"><a href="#Mycat数据库分库分表中间件" class="headerlink" title="Mycat数据库分库分表中间件"></a>Mycat 数据库分库分表中间件</h3><p><a target="_blank" rel="noopener" href="https://www.mycat.org.cn/">https://www.mycat.org.cn/</a><br><a target="_blank" rel="noopener" href="https://github.com/MyCATApache/Mycat-Server">https://github.com/MyCATApache/Mycat-Server</a><br><a target="_blank" rel="noopener" href="http://mycatone.top/">http://mycatone.top/</a><br>布式数据库中间件 TDDL、Amoeba、Cobar、MyCAT<br>TDDL、Amoeba、Cobar、MyCAT 先后诞生于 2007、2008、2008、2012 年。<br>总结：从历史进度和技术上看的话，企业级的数据库的读写分离技术请使用 mycat<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143641.png" alt="Img"></p>
+<h2 id="mycat"><a href="#mycat" class="headerlink" title="mycat"></a>mycat</h2><h3 id="简介及安装及配置"><a href="#简介及安装及配置" class="headerlink" title="简介及安装及配置"></a>简介及安装及配置</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143730.png" alt="Img"></p>
+<h3 id="mycat部署即读写分离实战"><a href="#mycat部署即读写分离实战" class="headerlink" title="mycat部署即读写分离实战"></a>mycat 部署即读写分离实战</h3><p>具体详细步骤见：<br>百度网盘 &gt;  数据库 &gt; MySQL 数据库 &gt;MySQL 数据库（黑马）<br>1，前提条件<br>mysql-community-server 8.4.4 版本<br>一主一从<br>主从复制（已配置完成）<br>mycat 安装包见百度网盘：数据库 &gt; mycat<br>mycat 安装在 mysql-master 主机中<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143836.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143840.png" alt="Img"><br>待续。。。。。。</p>
+<h1 id="资源分享"><a href="#资源分享" class="headerlink" title="资源分享"></a>资源分享</h1><p>通过网盘分享的文件：mycat 文档指南.pdf<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/15V1YroBPRb7c5GCYU0KFwg">https://pan.baidu.com/s/15V1YroBPRb7c5GCYU0KFwg</a> 提取码: wia8<br>通过网盘分享的文件：Mycat 所有平台安装包.zip<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1qZgASAmGFd9ldcjr-R_FfA">https://pan.baidu.com/s/1qZgASAmGFd9ldcjr-R_FfA</a> 提取码: 7yts<br>通过网盘分享的文件：MySQL - 基础篇.pdf<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1CO8sxV11vLrAB2_RX-DJRA">https://pan.baidu.com/s/1CO8sxV11vLrAB2_RX-DJRA</a> 提取码: neqd<br>通过网盘分享的文件：MySQL - 进阶篇.pdf<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/11fiqqcld05CmhTJV6C3RSg">https://pan.baidu.com/s/11fiqqcld05CmhTJV6C3RSg</a> 提取码: 8ge2<br>通过网盘分享的文件：MySQL - 运维篇.pdf<br>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1IQoWUYerNMOhOP4km93RyA">https://pan.baidu.com/s/1IQoWUYerNMOhOP4km93RyA</a> 提取码: bj8f</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <span class="social-link">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </span>
+
+          <img class="social-item-img" src="/images/wechat_channel.jpg">
+      </div>
+  </div>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/05/08/%E8%BF%90%E7%BB%B4%E7%AC%94%E8%AE%B0/" rel="prev" title="运维笔记">
+                  <i class="fa fa-angle-left"></i> 运维笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/05/13/vSphere-Server%E7%AC%94%E8%AE%B0/" rel="next" title="vSphere Server 笔记">
+                  vSphere Server 笔记 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="SOHUCS" sid="840c2723ab3348dff5ff5d73cd9809a7"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Fangxz</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">21k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:17</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyxTsqYtv","appkey":"23b85cbf5cc872c60b4232b1720e4deb","count":true}</script>
+<script src="/js/third-party/comments/changyan.js" defer></script>
+
+</body>
+</html>

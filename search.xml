@@ -1,9 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Mysql 笔记</title>
+    <url>/2025/05/13/Mysql%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p>本篇主要是结合黑马程序员的 B 站学习视频和手册以及个人 Mysql 的学习笔记部分提取组成，大部分是基于重点摘要和复习角度来记录。<br>涉及内容：基础篇、高级篇、运维篇<br><em>百度网盘资源分享见篇尾</em></p>
+<span id="more"></span>
+<h1 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h1><h2 id="MySQL概述"><a href="#MySQL概述" class="headerlink" title="MySQL概述"></a>MySQL 概述</h2><h3 id="数据库相关概念"><a href="#数据库相关概念" class="headerlink" title="数据库相关概念"></a>数据库相关概念</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>全称</th>
+<th>简称</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据库</td>
+<td>存储数据的仓库，数据是有组织的进行存储</td>
+<td> DataBase（DB）</td>
+</tr>
+<tr>
+<td>数据库管理系统</td>
+<td>操纵和管理数据库的大型软件</td>
+<td> DataBase ManagementSystem</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td> 操作关系型数据库的编程语言，定义了一套操作关系型数据库统一标准</td>
+<td> Structured QueryLanguage (SQL)</td>
+</tr>
+</tbody></table>
+<h3 id="MySQL数据库"><a href="#MySQL数据库" class="headerlink" title="MySQL数据库"></a>MySQL 数据库</h3><p><strong>官方</strong>： <a href="https://www.mysql.com/">https://www.mysql.com/</a><br>MySQL 官方提供了两种不同的版本：<br>社区版本（MySQL Community Server）<br>免费， MySQL 不提供任何技术支持<br>商业版本（MySQL Enterprise Edition）<br>收费，可以使用 30 天，官方提供技术支持</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装 mysql 前，必须检查之前是否安装过，如果有则卸载掉，并删除所有可能的文件<br>/etc/my.       /var/lib/mysql 等路径下的文件</p>
+<h4 id="YUM仓库安装"><a href="#YUM仓库安装" class="headerlink" title="YUM仓库安装"></a>YUM 仓库安装</h4><p><em>参考文档：<a href="https://dev.mysql.com/doc/refman/8.4/en/linux-installation-yum-repo.html">https://dev.mysql.com/doc/refman/8.4/en/linux-installation-yum-repo.html</a></em><br><em> 安装包下载：<a href="https://dev.mysql.com/downloads/repo/yum/">https://dev.mysql.com/downloads/repo/yum/</a>   （选择指定的系统兼容版本）</em><br><strong>优先使用这种方式安装</strong><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113507.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113510.png" alt="Img"></p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# wget <span class="attr">https</span>:<span class="comment">//dev.mysql.com/get/mysql84-community-release-el9-1.noarch.rpm</span></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# yum localinstall mysql84-community-release-el9-<span class="number">1.</span>noarch.<span class="property">rpm</span></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# rpm -q mysql84-community-release-el9-<span class="number">1.</span>noarch</span><br><span class="line">mysql84-community-release-el9-<span class="number">1.</span>noarch</span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# ls</span><br><span class="line">epel-modular.<span class="property">repo</span>  epel-testing-modular.<span class="property">repo</span>  epel-testing.<span class="property">repo</span>  mysql-community-debuginfo.<span class="property">repo</span>  mysql-community.<span class="property">repo</span>  mysql-community-source.<span class="property">repo</span>  redhat.<span class="property">repo</span></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]#</span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# yum repolist enabled | grep mysql.*-community</span><br><span class="line">mysql-<span class="number">8.4</span>-lts-community          <span class="title class_">MySQL</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> <span class="title class_">Community</span> <span class="title class_">Server</span></span><br><span class="line">mysql-connectors-community       <span class="title class_">MySQL</span> <span class="title class_">Connectors</span> <span class="title class_">Community</span></span><br><span class="line">mysql-tools-<span class="number">8.4</span>-lts-community    <span class="title class_">MySQL</span> <span class="title class_">Tools</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> <span class="title class_">Community</span></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# yum repolist all | grep mysql</span><br><span class="line">mysql-<span class="number">8.4</span>-lts-community                                       <span class="title class_">MySQL</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> 启用</span><br><span class="line">mysql-<span class="number">8.4</span>-lts-community-debuginfo                             <span class="title class_">MySQL</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> 禁用</span><br><span class="line">mysql-<span class="number">8.4</span>-lts-community-source                                <span class="title class_">MySQL</span> <span class="number">8.4</span> <span class="variable constant_">LTS</span> 禁用</span><br><span class="line">mysql-cluster-<span class="number">8.0</span>-community                                   <span class="title class_">MySQL</span> <span class="title class_">Cluster</span> 禁用</span><br><span class="line">mysql-cluster-<span class="number">8.0</span>-community-debuginfo                         <span class="title class_">MySQL</span> <span class="title class_">Cluster</span> 禁用</span><br><span class="line">mysql-cluster-<span class="number">8.0</span>-community-source                            <span class="title class_">MySQL</span> <span class="title class_">Cluster</span> 禁用</span><br><span class="line"></span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>           （安装想要的版本，否则默认是最新版本）</span><br><span class="line">[root@rhel9 yum.<span class="property">repos</span>.<span class="property">d</span>]# systemctl enable mysqld --now</span><br><span class="line">####</span><br><span class="line">如果 您的平台支持 yum-config-manager 或 <span class="variable constant_">DNF</span> config-manager 命令，您可以通过发出 以下命令禁用 <span class="number">8.4</span> 系列，并启用一个 <span class="number">8.0</span>系列：</span><br><span class="line"></span><br><span class="line">$&gt; sudo yum-config-manager --disable mysql-<span class="number">8.4</span>-lts-community</span><br><span class="line">$&gt; sudo yum-config-manager --enable  mysql80-community </span><br><span class="line">找到启用或禁用对应的mysql仓库</span><br><span class="line">####</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="源代码安装"><a href="#源代码安装" class="headerlink" title="源代码安装"></a>源代码安装</h4><p><em>参见：<a href="https://dev.mysql.com/doc/refman/8.4/en/source-installation.html">https://dev.mysql.com/doc/refman/8.4/en/source-installation.html</a></em><br><em> 下载：<a href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a></em><br><strong> 需要提前安装好编译工具 make,cmake,gcc 等</strong><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113813.png" alt="Img"></p>
+<h4 id="二进制包安装"><a href="#二进制包安装" class="headerlink" title="二进制包安装"></a>二进制包安装</h4><p><em>参见：<a href="https://dev.mysql.com/doc/refman/8.4/en/binary-installation.html">https://dev.mysql.com/doc/refman/8.4/en/binary-installation.html</a></em><br><em> 下载：<a href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a></em><br><strong> 二进制安装包默认需要自行解决安装依赖，不建议使用这种方式</strong><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113909.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513113915.png" alt="Img"></p>
+<h2 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a>SQL</h2><p>全称 Structured Query Language，结构化查询语言。操作关系型数据库的编程语言，定义了一套操作关系型数据库统一标准 。</p>
+<h3 id="SQL通用语法"><a href="#SQL通用语法" class="headerlink" title="SQL通用语法"></a>SQL 通用语法</h3><ul>
+<li>SQL 语句可以单行或多行书写，以分号结尾。</li>
+<li>SQL 语句可以使用空格 / 缩进来增强语句的可读性。</li>
+<li>MySQL 数据库的 SQL 语句不区分大小写，关键字建议使用大写。</li>
+<li>注释：<br>   单行注释：– 注释内容 或 # 注释内容<br>   多行注释：/* 注释内容 */</li>
+</ul>
+<h3 id="SQL分类"><a href="#SQL分类" class="headerlink" title="SQL分类"></a>SQL 分类</h3><p>SQL 语句，根据其功能，主要分为四类：DDL、DML、DQL、DCL。</p>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>全称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> DDL</td>
+<td>Data DefinitionLanguage</td>
+<td> 数据定义语言，用来定义数据库对象 (数据库，表，字段)</td>
+</tr>
+<tr>
+<td>DML</td>
+<td>Data Manipulation Language</td>
+<td> 数据操作语言，用来对数据库表中的数据进行增删改</td>
+</tr>
+<tr>
+<td> DQL</td>
+<td>Data Query Language</td>
+<td> 数据查询语言，用来查询数据库中表的记录</td>
+</tr>
+<tr>
+<td> DCL</td>
+<td>Data Control Language</td>
+<td> 数据控制语言，用来创建数据库用户、控制数据库的访问权限</td>
+</tr>
+</tbody></table>
+<p><strong>总结：DDL 是针对数据库、表、字段；DML 是针对表里边的真实数据内容的增删改（记住不包括查询）；DQL 是只针对表的查询；DCL 是针对数据库系统中的 数据库、用户、权限</strong></p>
+<h3 id="图形化界面工具"><a href="#图形化界面工具" class="headerlink" title="图形化界面工具"></a>图形化界面工具</h3><p><em>古语有云：</em><br><em>工欲善其事必先利其器</em><br><em>磨刀不误砍柴工</em><br>我们在日常的开发中，会借助于 MySQL 的图形化界面，来简化开发，提高开发效率。而目前 mysql 主流的图形化界面工具，有以下几种：<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513115414.png" alt="Img"><br><strong>对我而言起初用得是 Navicat 工具，但是后面转向了 DataFrip 工具，就一个词：“比 Navicat 好用，信不信由你”<br>想要 DataGrip 的 PJ 版本，评论区留言分享全家桶给你！</strong></p>
+<h4 id="安装与使用"><a href="#安装与使用" class="headerlink" title="安装与使用"></a>安装与使用</h4><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513120106.png" alt="Img"></p>
+<h1 id="运维篇"><a href="#运维篇" class="headerlink" title="运维篇"></a>运维篇</h1><h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p><em>参考文档：<a href="https://blog.csdn.net/q2524607033/article/details/133197100">https://blog.csdn.net/q2524607033/article/details/133197100</a></em><br>选择 mysql-community-server 8.4.4 版本测试（注意版本不同其某些命令可能被更新或弃用）<br>测试环境：一主一从</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142325.png" alt="Img"></p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>重点事项<br>1，二进制日志文件：这个文件是 mysql 数据库修改或更新后产生的 SQL 数据，以二进制来存储<br>2，bin_log  &amp;  Position：主从复制的基准是  以二进制日志文件及偏移  为起始来开始复制。相当于 对于从数据库而言，从主数据库复制过来的 SQL 都是 ‘Position 偏移’ 之后的内容，如果其中内容涉及到偏移之前的 SQL，那么可能就会复制失败，因为数据不一致（主有从没有）。<br>所以一般两种复制情况：<br>1，主 和 从数据库都是干净的，都是刚初始化 mysql 的，二者都不一样数据完全一致<br>2，主数据库之前存在旧数据库，然后才开始部署从数据库来做主从复制。<br>      建议将主数据库所有（或目标）数据库备份并恢复到从数据库中保证复制作业前，主从数据库一致性<br>      主：  flush tables with read lock ;     （加全局锁）<br>               mysqldump -uroot -p –all-databases –add-drop-database &gt; xxx.sql<br>      从： mysql -uroot -p   (进入交互界面才能用 source)<br>              source xxx.sql<br>             change replication source to xxxx;<br>             rm -rf mysql-slave-relay-bin.xxxxx  (可选：删除之前的中继二进制日志文件)<br>             reset replica  (可选：重置主从复制作业环境)<br>      主从：systemctl restart mysqld<br>3，查询当前主数据库二进制日志状态：SHOW BINARY LOG STATUS;   （8.4.4 版本）<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142901.png" alt="Img"><br>4，从数据库节点连接主数据库配置副本连接信息：<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142916.png" alt="Img"><br>5，从数据库开始数据库复制作业：start replica ;<br>       注：需要重新主从复制作业请先暂停复制：stop replica ;<br>6，查看从数据库复制作业的状态：show replica status\G;<br>7，主从复制正常状态的对比：如下<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142928.png" alt="Img"></p>
+<h3 id="常见排错"><a href="#常见排错" class="headerlink" title="常见排错"></a>常见排错</h3><p>1，删除从数据库的中继二进制日志文件<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142957.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143000.png" alt="Img"><br>2，重置 reset replica  作业<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143009.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143013.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143017.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143024.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143029.png" alt="Img"></p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143122.png" alt="Img"></p>
+<h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><h3 id="逻辑备份"><a href="#逻辑备份" class="headerlink" title="逻辑备份"></a>逻辑备份</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142425.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142428.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142432.png" alt="Img"></p>
+<h3 id="文件系统备份"><a href="#文件系统备份" class="headerlink" title="文件系统备份"></a>文件系统备份</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513142554.png" alt="Img"></p>
+<h2 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h2><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143510.png" alt="Img"></p>
+<h3 id="Amoeba-For-Mysql"><a href="#Amoeba-For-Mysql" class="headerlink" title="Amoeba For Mysql"></a>Amoeba For Mysql</h3><p>参考链接：<a href="https://amoeba.sourceforge.net/doc/index.htm">https://amoeba.sourceforge.net/doc/index.htm</a></p>
+<h3 id="Mycat数据库分库分表中间件"><a href="#Mycat数据库分库分表中间件" class="headerlink" title="Mycat数据库分库分表中间件"></a>Mycat 数据库分库分表中间件</h3><p><a href="https://www.mycat.org.cn/">https://www.mycat.org.cn/</a><br><a href="https://github.com/MyCATApache/Mycat-Server">https://github.com/MyCATApache/Mycat-Server</a><br><a href="http://mycatone.top/">http://mycatone.top/</a><br>布式数据库中间件 TDDL、Amoeba、Cobar、MyCAT<br>TDDL、Amoeba、Cobar、MyCAT 先后诞生于 2007、2008、2008、2012 年。<br>总结：从历史进度和技术上看的话，企业级的数据库的读写分离技术请使用 mycat<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143641.png" alt="Img"></p>
+<h2 id="mycat"><a href="#mycat" class="headerlink" title="mycat"></a>mycat</h2><h3 id="简介及安装及配置"><a href="#简介及安装及配置" class="headerlink" title="简介及安装及配置"></a>简介及安装及配置</h3><p><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143730.png" alt="Img"></p>
+<h3 id="mycat部署即读写分离实战"><a href="#mycat部署即读写分离实战" class="headerlink" title="mycat部署即读写分离实战"></a>mycat 部署即读写分离实战</h3><p>具体详细步骤见：<br>百度网盘 &gt;  数据库 &gt; MySQL 数据库 &gt;MySQL 数据库（黑马）<br>1，前提条件<br>mysql-community-server 8.4.4 版本<br>一主一从<br>主从复制（已配置完成）<br>mycat 安装包见百度网盘：数据库 &gt; mycat<br>mycat 安装在 mysql-master 主机中<br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143836.png" alt="Img"><br><img src="/./FILES/Mysql%E7%AC%94%E8%AE%B0.md/img-20250513143840.png" alt="Img"><br>待续。。。。。。</p>
+<h1 id="资源分享"><a href="#资源分享" class="headerlink" title="资源分享"></a>资源分享</h1><p>通过网盘分享的文件：mycat 文档指南.pdf<br>链接: <a href="https://pan.baidu.com/s/15V1YroBPRb7c5GCYU0KFwg">https://pan.baidu.com/s/15V1YroBPRb7c5GCYU0KFwg</a> 提取码: wia8<br>通过网盘分享的文件：Mycat 所有平台安装包.zip<br>链接: <a href="https://pan.baidu.com/s/1qZgASAmGFd9ldcjr-R_FfA">https://pan.baidu.com/s/1qZgASAmGFd9ldcjr-R_FfA</a> 提取码: 7yts<br>通过网盘分享的文件：MySQL - 基础篇.pdf<br>链接: <a href="https://pan.baidu.com/s/1CO8sxV11vLrAB2_RX-DJRA">https://pan.baidu.com/s/1CO8sxV11vLrAB2_RX-DJRA</a> 提取码: neqd<br>通过网盘分享的文件：MySQL - 进阶篇.pdf<br>链接: <a href="https://pan.baidu.com/s/11fiqqcld05CmhTJV6C3RSg">https://pan.baidu.com/s/11fiqqcld05CmhTJV6C3RSg</a> 提取码: 8ge2<br>通过网盘分享的文件：MySQL - 运维篇.pdf<br>链接: <a href="https://pan.baidu.com/s/1IQoWUYerNMOhOP4km93RyA">https://pan.baidu.com/s/1IQoWUYerNMOhOP4km93RyA</a> 提取码: bj8f</p>
+]]></content>
+      <categories>
+        <category>系统服务</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>hello-hexo</title>
+    <url>/2025/04/28/hello-hexo/</url>
+    <content><![CDATA[<p>当你看到这里的时候，意味着你也可以按照此文档搭建一个属于自己的博客系统，使用 next 主题将会让你事半功倍，像我一样行动起来吧！</p>
+<span id="more"></span>
+<h1 id="安装部署HEXO"><a href="#安装部署HEXO" class="headerlink" title="安装部署HEXO"></a>安装部署 HEXO</h1><p>以下是在 Windows 系统上安装和配置 Hexo 以部署到 GitHub Pages 的详细步骤：<br>备注：提交代码到 github 需要打通本地的 blog 服务器 翻墙（比心云）</p>
+<h2 id="安装-Node-js"><a href="#安装-Node-js" class="headerlink" title="安装 Node.js"></a>安装 Node.js</h2><p>1. 下载 Node.js</p>
+<ul>
+<li>打开 Node.js 官方网站：<br><a href="https://nodejs.org/">https://nodejs.org/</a></li>
+<li> 点击 “Download” 按钮，选择适合 Windows 系统的 LTS（长期支持）版本进行下载。<br>2. 安装 Node.js</li>
+<li> 双击下载好的安装包，运行安装向导。</li>
+<li>一直点击 “下一步” 按钮，使用默认安装选项即可。</li>
+<li>安装完成后，打开命令提示符（Win + R，输入<br>cmd，按回车），输入以下命令验证安装<br>node -v<br>npm -v<br>如果显示了 Node.js 和 npm 的版本号，说明安装成功。</li>
+</ul>
+<h2 id="安装-Git"><a href="#安装-Git" class="headerlink" title="安装 Git"></a>安装 Git</h2><p>1. 下载 Git</p>
+<ul>
+<li>打开 Git 官方网站：<br><a href="https://git-scm.com/">https://git-scm.com/</a></li>
+<li> 点击 “Download” 按钮，选择适合 Windows 系统的版本进行下载。<br>2. 安装 Git</li>
+<li> 双击下载好的安装包，运行安装向导。</li>
+<li>在安装过程中，选择 “Use Git from the command line and also from 3rd-party software”，然后一直点击 “下一步” 按钮，使用默认安装选项即可。</li>
+<li>安装完成后，再次打开命令提示符，输入以下命令验证安装</li>
+</ul>
+<p>git –version<br>如果显示了 Git 的版本号，说明安装成功。<br>3. 配置 Git</p>
+<ul>
+<li>配置你的 GitHub 用户名和邮箱（确保与你的 GitHub 账号一致）</li>
+</ul>
+<p>git config –global user.name “fxxxxxx”<br>git config –global user.email “<a href="mailto:xxxxxxxx@qq.com">xxxxxxxx@qq.com</a>“</p>
+<ul>
+<li>生成 SSH 密钥（用于免密登录 GitHub）：bash</li>
+</ul>
+<p>ssh-keygen -t ed25519 -C “<a href="mailto:xxxxxxxx@qq.com">xxxxxxxx@qq.com</a>“<br>按提示操作，可直接回车使用默认文件路径。然后将生成的公钥（<br>id_ed25519.pub 文件内容）添加到 GitHub 账号的 SSH 密钥列表中</p>
+<p>clip &lt; ~/.ssh/id_ed25519.pub<br>打开 GitHub 账号设置的 SSH 密钥页面，点击 “New SSH key”，粘贴公钥内容并保存。</p>
+<h2 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h2><p><a href="https://hexo.io/zh-cn/">https://hexo.io/zh-cn/</a><br>1. 创建 Hexo 项目文件夹</p>
+<ul>
+<li>打开文件资源管理器，在合适的位置创建一个文件夹，例如<br>D:\MyBlog，用于存放 Hexo 项目。<br>2. 初始化 Hexo 项目</li>
+<li>打开命令提示符，切换到刚才创建的文件夹目录（例如<br>D:\MyBlog）<br>cd D:\MyBlog<br>执行以下命令初始化 Hexo 项目<br>npm install -g hexo-cli<br>hexo init blog<br>其中<br>blog 是项目名称，你可以根据自己的喜好修改。这会在当前目录下生成一个名为<br>blog 的文件夹，里面包含了 Hexo 项目的基本结构。<br>3. 安装 Hexo 项目依赖</li>
+<li>进入<br>blog 项目目录<br>cd blog<br>执行以下命令安装项目依赖<br>npm install<br>4. 配置 Hexo 项目</li>
+<li>打开<br>blog 项目根目录下的<br>_config.yml 文件，使用文本编辑器（如记事本、VS Code 等）进行编辑。</li>
+<li>根据自己的需求修改网站标题、描述、作者等基本信息，例如：yaml<br>title: 我的个人网站<br>subtitle: 这是我的个人博客<br>description: 分享我的生活和学习<br>author: 方 XX</li>
+<li> 修改网站的 URL 为你的 GitHub Pages 仓库地址：yaml<br>url: <a href="https://fangxinzhen.github.io/">https://fangxinzhen.github.io</a></li>
+<li> 配置部署相关信息，在<br>_config.yml 文件中找到<br>deploy 字段，修改为：yaml</li>
+</ul>
+<p>deploy:<br>  type: git<br>  repo: <a href="mailto:git@github.com">git@github.com</a>:fangxinzhen/fangxinzhen.github.io.git<br>  branch: main</p>
+<p>其中<br>repo 的值为你的 GitHub 仓库的 SSH 地址。<br>5. 安装 Hexo 部署插件</p>
+<ul>
+<li>在<br>blog 项目目录下，执行以下命令安装用于部署的 Git 插件：bash</li>
+</ul>
+<p>npm install hexo-deployer-git –save</p>
+<h2 id="创建-GitHub-仓库"><a href="#创建-GitHub-仓库" class="headerlink" title="创建 GitHub 仓库"></a>创建 GitHub 仓库</h2><p>1. 登录 GitHub</p>
+<ul>
+<li>打开 GitHub 官网：<br><a href="https://github.com,并登录你的账号./">https://github.com，并登录你的账号。</a><br>2. 创建新仓库</li>
+<li>点击页面右上角的 “+” 号，选择 “New repository”（新建仓库）。</li>
+<li>在 “Repository name”（仓库名称）中输入<br>fangxinzhen.github.io。</li>
+<li>选择 “Public”（公开），并勾选 “Initialize this repository with a README”（用 README 初始化此仓库）。</li>
+<li>点击 “Create repository”（创建仓库）按钮。</li>
+</ul>
+<h2 id="生成并部署网站"><a href="#生成并部署网站" class="headerlink" title="生成并部署网站"></a>生成并部署网站</h2><p>1. 生成静态文件<br>在 blog 项目目录下，执行以下命令生成静态文件<br>hexo generate<br>2. 部署到 GitHub Pages</p>
+<ul>
+<li>执行以下命令将生成的静态文件部署到 GitHub 仓库<br>hexo deploy</li>
+</ul>
+<h2 id="配置-GitHub-Pages"><a href="#配置-GitHub-Pages" class="headerlink" title="配置 GitHub Pages"></a>配置 GitHub Pages</h2><p>1. 进入仓库设置</p>
+<ul>
+<li>在 GitHub 上找到你的<br>fangxinzhen.github.io 仓库，点击 “Settings”（设置）。<br>2. 设置 GitHub Pages</li>
+<li> 在左侧菜单中找到 “Pages” 选项并点击。</li>
+<li>在 “Source”（源）部分，选择 “Branch: main / Root: /”（分支：main / 根目录：/）。</li>
+<li>点击 “Save”（保存）按钮。</li>
+</ul>
+<h2 id="查看网站"><a href="#查看网站" class="headerlink" title="查看网站"></a>查看网站</h2><p>完成上述步骤后，稍等片刻，你的个人网站就可以通过以下地址访问<br><a href="https://fangxinzhen.github.io/">https://fangxinzhen.github.io</a></p>
+<h2 id="更新网站内容"><a href="#更新网站内容" class="headerlink" title="更新网站内容"></a>更新网站内容</h2><p>当你需要更新网站内容时，只需在 blog 项目目录下进行以下操作：<br>1. 修改或添加文章、页面等内容。<br>2. 生成静态文件：bash</p>
+<p>hexo generate<br>3. 部署到 GitHub Pages：bash</p>
+<p>hexo deploy</p>
+<h2 id="成功部署到github中"><a href="#成功部署到github中" class="headerlink" title="成功部署到github中"></a>成功部署到 github 中</h2><p><a href="https://fangxinzhen.github.io/">https://fangxinzhen.github.io/</a><br><img src="/./FILES/hello-hexo.md/img-20250513151151.png" alt="Img"></p>
+<h1 id="使用NEXT主题"><a href="#使用NEXT主题" class="headerlink" title="使用NEXT主题"></a>使用 NEXT 主题</h1><p>官方指南：<a href="https://theme-next.js.org/mist/docs/getting-started/">https://theme-next.js.org/mist/docs/getting-started/</a></p>
+<h2 id="安装NEXT主题"><a href="#安装NEXT主题" class="headerlink" title="安装NEXT主题"></a>安装 NEXT 主题</h2><p><img src="/./FILES/hello-hexo.md/img-20250513151236.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151240.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151244.png" alt="Img"></p>
+<h2 id="排错"><a href="#排错" class="headerlink" title="排错"></a>排错</h2><p><img src="/./FILES/hello-hexo.md/img-20250513151327.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151330.png" alt="Img"><br><em>git ls-remote -h <a href="mailto:git@github.com">git@github.com</a>:fangxinzhen/fangxinzhen.github.io.git</em><br><img src="/./FILES/hello-hexo.md/img-20250513151344.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151347.png" alt="Img"></p>
+<h2 id="插入图片问题"><a href="#插入图片问题" class="headerlink" title="插入图片问题"></a>插入图片问题</h2><p>关于使用 Yan note 工具编辑 makedown 文件，插入图片失效的问题，使其相对路径作为<br><img src="/./FILES/hello-hexo.md/img-20250513151437.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151441.png" alt="Img"></p>
+<h2 id="网站访问人数计数"><a href="#网站访问人数计数" class="headerlink" title="网站访问人数计数"></a>网站访问人数计数</h2><p>LeanCloud（中国）<br>为 NexT 主题添加文章阅读次数计数。记录如何设置计数器并安全运行<br><img src="/./FILES/hello-hexo.md/img-20250513151531.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151551.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151651.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151658.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151702.png" alt="Img"></p>
+<h2 id="git推送到github问题"><a href="#git推送到github问题" class="headerlink" title="git推送到github问题"></a>git 推送到 github 问题</h2><p>1，先检查本地到 github 网站自己的仓库网络是否可达（先翻墙再做）<br>git ls-remote -h <a href="mailto:git@github.com">git@github.com</a>:fangxinzhen/fangxinzhen.github.io.git<br>2，开始推送<br>hexo deploy</p>
+<h2 id="评论系统-畅言云评"><a href="#评论系统-畅言云评" class="headerlink" title="评论系统-畅言云评"></a>评论系统 - 畅言云评</h2><p><img src="/./FILES/hello-hexo.md/img-20250513151747.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151751.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151810.png" alt="Img"><br><img src="/./FILES/hello-hexo.md/img-20250513151813.png" alt="Img"></p>
+]]></content>
+  </entry>
+  <entry>
     <title>RHCE 笔记</title>
     <url>/2025/05/07/RHCE%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<h1 id="系统管理"><a href="#系统管理" class="headerlink" title="系统管理"></a>系统管理</h1><p>记录关于 RHCE9 版本的系统相关笔记，系统管理，安全，网络，存储等方面的摘记！</p>
+    <content><![CDATA[<h1 id="系统管理"><a href="#系统管理" class="headerlink" title="系统管理"></a>系统管理</h1><p>记录关于 RHCE9 版本的系统相关笔记，系统管理，安全，网络，存储等方面的摘记！<br><em>百度网盘资源分享见篇尾</em></p>
 <span id="more"></span>
 <h2 id="GNOME-桌面环境"><a href="#GNOME-桌面环境" class="headerlink" title="GNOME 桌面环境"></a>GNOME 桌面环境</h2><h3 id="桌面环境基础"><a href="#桌面环境基础" class="headerlink" title="桌面环境基础"></a>桌面环境基础</h3><p><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144102.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144109.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144116.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144129.png" alt="Img"></p>
 <h3 id="远程桌面"><a href="#远程桌面" class="headerlink" title="远程桌面"></a>远程桌面</h3><h4 id="单用户远程GNOME桌面"><a href="#单用户远程GNOME桌面" class="headerlink" title="单用户远程GNOME桌面"></a>单用户远程 GNOME 桌面</h4><p>支持远程中，客户端和服务端，均可控制查看桌面画面<br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144211.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144217.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144300.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144306.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144311.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144314.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144318.png" alt="Img"><br>注意：gnome-server 服务的默认 vnc 端口是 5900<br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508144517.png" alt="Img"></p>
@@ -183,29 +357,113 @@
 <h3 id="使用-SAMBA-作为服务器"><a href="#使用-SAMBA-作为服务器" class="headerlink" title="使用 SAMBA 作为服务器"></a>使用 SAMBA 作为服务器</h3><p><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161745.png" alt="Img"><br>1<img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161749.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161753.png" alt="Img"></p>
 <h4 id="SAMBA-设置为独立服务器"><a href="#SAMBA-设置为独立服务器" class="headerlink" title="SAMBA 设置为独立服务器"></a>SAMBA 设置为独立服务器</h4><p><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161805.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161809.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161812.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161816.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161819.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161823.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161828.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161832.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161835.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161841.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161846.png" alt="Img"></p>
 <h4 id="挂载-SMB-共享"><a href="#挂载-SMB-共享" class="headerlink" title="挂载 SMB 共享"></a>挂载 SMB 共享</h4><p><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161857.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161901.png" alt="Img"><br><img src="/./FILES/RHCE%E7%AC%94%E8%AE%B0.md/img-20250508161904.png" alt="Img"></p>
-<h1 id="待续"><a href="#待续" class="headerlink" title="待续"></a>待续</h1>]]></content>
+<p>待续。。。。。。</p>
+<h1 id="资源分享"><a href="#资源分享" class="headerlink" title="资源分享"></a>资源分享</h1><p>通过网盘分享的文件：RHEL9-Linux 系统文档（中文精品）<br>链接: <a href="https://pan.baidu.com/s/14aRozhiKTNeNpxm7QiHsZA">https://pan.baidu.com/s/14aRozhiKTNeNpxm7QiHsZA</a> 提取码: sunu</p>
+]]></content>
       <categories>
         <category>操作系统</category>
       </categories>
   </entry>
   <entry>
-    <title>hello-world</title>
-    <url>/2025/04/28/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+    <title>vSphere Server 笔记</title>
+    <url>/2025/05/13/vSphere-Server%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p>此篇笔记是工作实战部署记录，从 ESXI 到 VC 的安装及配置以及注意事项，末尾也会分享软件包和 PJ 工具以及官方技术文档<br><em>百度网盘资源分享见篇尾</em></p>
 <span id="more"></span>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></tbody></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></tbody></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></tbody></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h1 id="ESXI"><a href="#ESXI" class="headerlink" title="ESXI"></a>ESXI</h1><h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>硬件平台：IBM 3650 M4 , 内存 64G  SAS 硬盘 800G;<br>               IBM 3650 M4 , 内存 64G  SAS 硬盘 1.5T;<br>软件部署：VMware ESXI 7.0 （VMware vSphere 7 Enterprise Plus）<br>  VMware ESXI 7.0 密钥，及 VCSA7.0 密钥激活工具（见网盘）</p>
+<h2 id="安装虚拟化VMware-ESXI-7-0操作系统"><a href="#安装虚拟化VMware-ESXI-7-0操作系统" class="headerlink" title="安装虚拟化VMware ESXI 7.0操作系统"></a>安装虚拟化 VMware ESXI 7.0 操作系统</h2><p>1, 配置磁盘阵列 RAID , 选择 RAID 5 （三块盘以上）， 注：不能在 UEFI 模式下安装 ESXI 系统。<br>2，制作 ESXI 7.0 的光盘或 U 盘启动。<br>3，安装步骤有四个如下：输入 root 管理员密码（需要记住此密码）；配置管理网络；选择网络适配器；配置静态 IPv4；配置 DNS；测试管理网络；<br>如：<br>ESXI 01 IP:192.168.2.163<br>ESXI 01 IP:192.168.2.164<br>建议物理机节点和虚拟机节点 IP 段分开<br>注意事项：如果出现网络测试不通的情况。第一检查服务器硬件网卡 NIC 是否开启；第二选择 ESXI 控制面板的网络适配器，检查是否选中物理网线连接的 NIC 网卡及连通状态；若还是 failed 则检查网线连接的交换机是否正常（例如用笔记本来与服务器网线直连测试）。<br>CD-ROM 安装 ESXI7.0 步骤省略</p>
+<h2 id="登录VMware-ESXI管理平台，检查基本参数信息和激活ESXI"><a href="#登录VMware-ESXI管理平台，检查基本参数信息和激活ESXI" class="headerlink" title="登录VMware ESXI管理平台，检查基本参数信息和激活ESXI"></a>登录 VMware ESXI 管理平台，检查基本参数信息和激活 ESXI</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164152.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164155.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164158.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164201.png" alt="Img"></p>
+<h2 id="使用VMware-vSphere-Client-临时-来管理ESXI节点"><a href="#使用VMware-vSphere-Client-临时-来管理ESXI节点" class="headerlink" title="使用VMware vSphere Client (临时)来管理ESXI节点"></a>使用 VMware vSphere Client (临时) 来管理 ESXI 节点</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164222.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164225.png" alt="Img"><br><em>备注：ESXI 7.0 不支持 vsphere client 远程控制 (ESXI 6.0 可以)，所以建议在 ESXI 网页上操作，先安装 Windows server 虚拟机，然后在里边引导安装 Vmware vSphere vCenter 来控制 ESXI 节点。</em><br>也可以通过 Vmware WorkStation 来简便快捷管理 ESXI 物理节点和虚拟机节点，步骤如下：<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164251.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164254.png" alt="Img"></p>
+<h2 id="安装虚拟机"><a href="#安装虚拟机" class="headerlink" title="安装虚拟机"></a>安装虚拟机</h2><p>Windows 安装步骤：<br>采用 CD 光盘镜像安装<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164317.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164320.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164323.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164326.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164329.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164332.png" alt="Img"><br><em>上传 IOS 镜像安装操作系统（推荐这个方式安装）：</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164348.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164351.png" alt="Img"><br>其它步骤同上。<br>Linux 安装步骤：<br>xxxxx</p>
+<h2 id="ESXI服务器关机步骤"><a href="#ESXI服务器关机步骤" class="headerlink" title="ESXI服务器关机步骤"></a>ESXI 服务器关机步骤</h2><p>先将 ESXI 服务器内的虚拟机关机，然后开启 ESXI 的维护模式，再正常关机。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164428.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164431.png" alt="Img"></p>
+<h1 id="VMware-vCenter-Server"><a href="#VMware-vCenter-Server" class="headerlink" title="VMware vCenter Server"></a>VMware vCenter Server</h1><h2 id="安装VCSA-有DNS部署方法"><a href="#安装VCSA-有DNS部署方法" class="headerlink" title="安装VCSA 有DNS部署方法"></a>安装 VCSA 有 DNS 部署方法</h2><p>1、安装 vCenter Server 前需要在 ESXI 节点上准备一个 Windows server 虚机平台<br>2、选择一台 Windows server 虚机（或外部物理服务器）预先配置好 vCenter Server 的 FQDN 域名服务，优先使用虚机部署 DNS<br>3,   如果是同一个网段局域网可不用域名解析，直接使用 IP 来部署 VCSA (能用域名就用域名)<br>规划 IP 及域名等名称<br>FQDN : vcsa7.vsphere.com<br>IP： 192.168.2.210<br>浏览器地址：<a href="https://vcsa7.vsphere.com:5480或https://192.168.2.210">https://vcsa7.vsphere.com:5480 或 https://192.168.2.210</a><br>SSO  登录：<br>账号：<a href="mailto:administrator@vsphere.local">administrator@vsphere.local</a><br>密码：Vcsa2023!!!</p>
+<p>先按步骤八配置好 DNS 服务器，再步骤七<br>备注：<br>vCenter Server Appliance (VCSA) 和 vcenter (VC) 区别为：系统不同、虚拟化环境不同、部署不同。</p>
+<p>一、系统不同</p>
+<p>1、vCenter Server Appliance：vCenter Server Appliance 基于嵌入式 linux 系统。</p>
+<p>2、vcenter：vcenter 基于 Windows 系统。</p>
+<p>二、虚拟化环境不同</p>
+<p>1、vCenter Server Appliance：vCenter Server Appliance 应用于较小的虚拟化环境，主机小于 50 台，虚拟机少于 1000 个。</p>
+<p>2、vcenter：vcenter 应用于较大的虚拟化环境，主机大于 50 台，虚拟机多于 1000 个。<br>三、部署不同</p>
+<p>1、vCenter Server Appliance：vCenter Server Appliance 需要安装” 客户端集成插件” 并执行光盘中的 vcsa-setup.html，以 HTML 的方式部署。</p>
+<p>2、vcenter：vcenter 支持使用 vSphere Client 或 vSphere Web Client 部署<br>总结一句话：VCSA 和 VC 都差不多</p>
+<p>1、下载并制作 VMware vCenter Server （VC 或 VCSA）的光盘镜像（或 ISO 安装包）。插入 ESXI 服务器光盘驱动中。上传 ESXI 文件夹中（先确保配置好域名解析服务 FQND , 见步骤八）<br>以下使用的是 VCSA 7.0 安装过程步骤：（其它版本的同理）<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164554.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164557.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164601.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164604.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164607.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164610.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164614.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164617.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164619.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164623.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164629.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164633.png" alt="Img"><br><em>大约等待 60 分钟左右，已成功！！！！！</em><br><strong>开始登录 VC！！！</strong></p>
+<h2 id="登录VC"><a href="#登录VC" class="headerlink" title="登录VC"></a>登录 VC</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164701.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164808.png" alt="Img"></p>
+<h3 id="esxi访问"><a href="#esxi访问" class="headerlink" title="esxi访问"></a>esxi 访问</h3><p>https://esxi 的 IP /ui/、<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165409.png" alt="Img"></p>
+<h3 id="VC访问"><a href="#VC访问" class="headerlink" title="VC访问"></a>VC 访问</h3><p>vCenter Client（默认端口是 443，如果修改了则添加自己修改后的端口访问）<br>https:// IP /<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165447.png" alt="Img"></p>
+<h3 id="VC设备后台"><a href="#VC设备后台" class="headerlink" title="VC设备后台"></a>VC 设备后台</h3><p>vCenter Server Appliance 设备后台管理（设备管理端口是 5480）<br><a href="https://vcsa的ip:5480/">https://vcsa 的 IP:5480/</a><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165521.png" alt="Img"></p>
+<p><em>注：此前首次安装 VCSA 发生意外报错：</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164821.png" alt="Img"><br>原因：VCSA 安装失败！原因是主机名 localhost 未被解析到 IP，未作 DNS。参考如下<br>参见：<a href="https://blog.51cto.com/u_3701740/2521875">https://blog.51cto.com/u_3701740/2521875</a><br>          <a href="https://blog.csdn.net/z136370204/article/details/109098506">https://blog.csdn.net/z136370204/article/details/109098506</a><br>          <a href="https://www.miaodongla.com/dongbaike/8913.html">https://www.miaodongla.com/dongbaike/8913.html</a></p>
+<h2 id="VCSA-无DNS部署方法"><a href="#VCSA-无DNS部署方法" class="headerlink" title="VCSA   无DNS部署方法"></a>VCSA   无 DNS 部署方法</h2><p>1，前面正常安装，DNS 和 FQDN 也是写本机 IP，注意如果没有 DNS 服务器，请填写 VCSA 虚拟机 IP，不要随意填写网关或其他 IP，因为填写的 IP 不能解析第二阶段会报错导致部署失败。<br> 2，完成第 1 阶段部署，重点来了，不要直接点击 “继续”.<br>VCSA 7.0 版本系统名称使用默认 localhost ，之前 VCSA 6.7（系统名称使用默认 photon-machine）修改的方式在 VCSA 7 中不适用，需要在 VCSA 7 虚拟机下进行修改操作。VCSA 系统修改本地解析域名，<br>步骤如下：<br>       登录 VCSA 7 虚拟机，打开布署好的 VCSA 服务器控制台，按 ALT+F2 进入命令行模式，输入 shell<br>       进入命令行模式<br>       shell<br>       cat /etc/hosts   // 看到主机解析并没有对应的 IP 地址<br>       vi /etc/hosts    // 编辑<br>       192.168.2.210  localhost  // 增加 IP 地址。<br>3, 修改完后再继续第二阶段的安装<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164939.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164944.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164947.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164950.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164954.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513164959.png" alt="Img"></p>
+<p><strong>总结一句话：正式环境中需要部署 VMware vCenter Server 前 需要预搭建并配置好 DNS 服务器，保证对 ESXI 以及 VC  或 VCSA 做 DNS 完全限定域名解析（FQDN），测试环境可以不做 DNS。</strong></p>
+<h2 id="DNS域名服务器搭建并给ESXI节点和vCenter-Server-配置FQDN"><a href="#DNS域名服务器搭建并给ESXI节点和vCenter-Server-配置FQDN" class="headerlink" title="DNS域名服务器搭建并给ESXI节点和vCenter Server 配置FQDN"></a>DNS 域名服务器搭建并给 ESXI 节点和 vCenter Server 配置 FQDN</h2><p>解决办法：先用 ESXI 的一台虚机 （或外部的一台物理服务器）做 DNS 服务器，充当 ESXI 节点和 VCSA 的 IP 域名解析。（优先建议用虚拟机安装 DNS 域名服务，刚开始的那第一台虚拟机最适用）<br>以下是以一台外部物理服务器搭建 DNS 为例。DNS ：192.168.2.123<br>步骤如下：<br>1、部署 DNS 服务器角色与功能<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165044.png" alt="Img"></p>
+<p>2、创建正向和反向的解析区域<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165053.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165056.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165100.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165104.png" alt="Img"></p>
+<p>3、新建（正反向）主机解析<br>ESXI 节点和本地 DNS 服务器的域名解析<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165114.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165136.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165140.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165143.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165147.png" alt="Img"></p>
+<p>4、预配置 Vcenter server 的 FQDN<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165200.png" alt="Img"></p>
+<p>5、配置 ESXI 节点的主机名以及指定 DNS<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165212.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165216.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165219.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165223.png" alt="Img"></p>
+<h2 id="激活VC"><a href="#激活VC" class="headerlink" title="激活VC"></a>激活 VC</h2><p>激活工具激活（见网盘）</p>
+<h2 id="排错"><a href="#排错" class="headerlink" title="排错"></a>排错</h2><ul>
+<li>网页访问 vCenter Server 时出现 no healthy upstream 的解决方法<br>参见：<a href="https://blog.51cto.com/wangchunhai/4907250">https://blog.51cto.com/wangchunhai/4907250</a><br>报错如下：<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165610.png" alt="Img"><br>对于 “no healthy upstream” 的错误提示，可能的原因有以下几种。</li>
+</ul>
+<p>（1）vCenter Server 部分服务没有运行，或者运行出现错误。<br>（最常见的错误，比如非正常关机导致再次开机时部分服务未开启成功）</p>
+<p>（2）vCenter Server 所设置的 DNS 服务器出现错误。</p>
+<p>（3）vCenter Server 本地 hosts 文件配置错误。<br>（1）步骤：<br>登录 vCenter Server 后台管理界面（ <a href="https://vcip或域名:5480），在“服务”中查看“启动类型”为“自动”的服务的运行状况是否是“正常”，如果状态为“停止”或“运行正常，但出现警告”的，应选中对应的服务，启动已经停止的服务，或者重新启动出现警告的服务">https://vcip 或域名：5480），在 “服务” 中查看 “启动类型” 为 “自动” 的服务的运行状况是否是 “正常”，如果状态为 “停止” 或 “运行正常，但出现警告” 的，应选中对应的服务，启动已经停止的服务，或者重新启动出现警告的服务</a><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165619.png" alt="Img"><br>一般情况下，如果能登录进入服务端口为 5480 的后台管理界面，在启动或重新启动相关的服务后，vCenter Server 的管理就可以恢复正常。<br>vCenter 进入 shell 命令模式步骤<br>打开 VC 虚机的控制台，按 F2 进入后如下图 1，在里面将 BASH Shell 设置为 Enabled<br>按 ALT+F2 进入命令行模式<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165631.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165636.png" alt="Img"><br>重新引导系统重启后，在命令行界面输入 shell，OK<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165645.png" alt="Img"></p>
+<h1 id="配置管理-vSphere-vCtener"><a href="#配置管理-vSphere-vCtener" class="headerlink" title="配置管理 vSphere vCtener"></a>配置管理 vSphere vCtener</h1><h2 id="初始化基础配置"><a href="#初始化基础配置" class="headerlink" title="初始化基础配置"></a>初始化基础配置</h2><h3 id="新建数据中心"><a href="#新建数据中心" class="headerlink" title="新建数据中心"></a>新建数据中心</h3><h4 id="新建集群"><a href="#新建集群" class="headerlink" title="新建集群"></a>新建集群</h4><p>使用 VM 的高级功能则需要新建集群，不使用高级功能可不建集群</p>
+<h5 id="添加主机"><a href="#添加主机" class="headerlink" title="添加主机"></a>添加主机</h5><p>VCSA 所在的主机可不在其关机的状态下直接加入新建的集群，忽略告警，其它主机请先进入维护模式再添加主机<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513165938.png" alt="Img"></p>
+<h5 id="快速入门配置"><a href="#快速入门配置" class="headerlink" title="快速入门配置"></a>快速入门配置</h5><ul>
+<li>选定服务</li>
+<li>维护模式</li>
+<li>时间同步（生产环境建议配置 NTP 服务）</li>
+<li>管理网络<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170007.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170010.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170013.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170015.png" alt="Img"></li>
+</ul>
+<h4 id="创建管理网络"><a href="#创建管理网络" class="headerlink" title="创建管理网络"></a>创建管理网络</h4><h5 id="新建分布式交换机"><a href="#新建分布式交换机" class="headerlink" title="新建分布式交换机"></a>新建分布式交换机</h5><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170106.png" alt="Img"></p>
+<h5 id="添加主机-1"><a href="#添加主机-1" class="headerlink" title="添加主机"></a>添加主机</h5><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170132.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170136.png" alt="Img"></p>
+<h5 id="新建分布式端口组"><a href="#新建分布式端口组" class="headerlink" title="新建分布式端口组"></a>新建分布式端口组</h5><p>集群环境下，建议后续所有的虚拟机业务网卡流量统一全部连接分布式端口组上<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170752.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170756.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170802.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170806.png" alt="Img"></p>
+<p><strong>DSwitch 分布式交换机的理解（重点）</strong><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170828.png" alt="Img"><br><strong>DSwitch 上做 LACP 链路聚合组（重点）</strong></p>
+<h5 id="创建链路聚合组"><a href="#创建链路聚合组" class="headerlink" title="创建链路聚合组"></a>创建链路聚合组</h5><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170916.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170920.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170923.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170926.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170929.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170932.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170936.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170939.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513170942.png" alt="Img"></p>
+<h4 id="管理主机网络"><a href="#管理主机网络" class="headerlink" title="管理主机网络"></a>管理主机网络</h4><p>可选项，比如需要将物理适配器做 LACP 链路聚合时使用<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171008.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171013.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171016.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171019.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171023.png" alt="Img"></p>
+<h4 id="创建集群存储"><a href="#创建集群存储" class="headerlink" title="创建集群存储"></a>创建集群存储</h4><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171047.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171050.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171053.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171056.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171059.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171102.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171105.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171108.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171111.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171118.png" alt="Img"></p>
+<h2 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h2><p>略。。。。。</p>
+<h3 id="虚拟机模板"><a href="#虚拟机模板" class="headerlink" title="虚拟机模板"></a>虚拟机模板</h3><p>1，转换或模板<br>直接将虚拟机转换成模板（仅在虚拟机关机下进行）<br>2，克隆为模板<br>复制虚拟机的方式产生模板，原虚拟机保留<br>3，策略和配置文件<br>虚拟机自定义规范（所谓 Windows 和 Linux 的预配置应答文件）<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171144.png" alt="Img"></p>
+<p>自定义 Windows 客户机操作系统要求 Windows 客户机操作系统中已安装 Sysprep。一定要安装 vmware tools 。<br>以转换为模板方式：<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171352.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171355.png" alt="Img"><br>以模板来创建虚拟机<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171408.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171411.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171413.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171416.png" alt="Img"></p>
+<p>后续自定义硬件根据需要修改。。。。。。。。</p>
+<p>备注：克隆虚拟机模板前需要安装 VMware Tools 工具，那样才能确保克隆后模板可以修改自定义客户机操作系统选项，Sysprep 工具虽然内嵌入高版本的 Windows 操作系统，但如果不安装 VMware Tools 则无法使用自定义操作系统选项。那样的话后续会出现计算机名、SID 重复问题。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171428.png" alt="Img"></p>
+<h3 id="Windows自定义应答配置"><a href="#Windows自定义应答配置" class="headerlink" title="Windows自定义应答配置"></a>Windows 自定义应答配置</h3><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171159.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171202.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171205.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171208.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171213.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171217.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171220.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171223.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171226.png" alt="Img"></p>
+<h3 id="Linux自定义配置应答"><a href="#Linux自定义配置应答" class="headerlink" title="Linux自定义配置应答"></a>Linux 自定义配置应答</h3><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171302.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171305.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171308.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171311.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171314.png" alt="Img"></p>
+<p><em>注意：建议创建虚拟机模板前将虚拟机上挂载的 CD 盘卸载掉，避免出现以下非必要的警告</em></p>
+<h3 id="虚拟机常用操作"><a href="#虚拟机常用操作" class="headerlink" title="虚拟机常用操作"></a>虚拟机常用操作</h3><h4 id="启用热插拔"><a href="#启用热插拔" class="headerlink" title="启用热插拔"></a>启用热插拔</h4><p>注意：<br>虚拟机的 CPU 和内存默认情况下是未开启热插拔状态。<br>虚拟机如果需要开启 FT 高级容错功能则不能开启热插拔<br>根据实际需要建议创建虚拟机前开启热插拔或关闭虚拟机后手动开启热插拔选项。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171618.png" alt="Img"></p>
+<h4 id="添加虚拟机到原始存储（LUN）的映射（RDM）"><a href="#添加虚拟机到原始存储（LUN）的映射（RDM）" class="headerlink" title="添加虚拟机到原始存储（LUN）的映射（RDM）"></a>添加虚拟机到原始存储（LUN）的映射（RDM）</h4><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171626.png" alt="Img"><br>注：对象存储必须是 LUN 类型的共享存储，如：SCSI ,FC 等类型的存储对象<br>以下以连接 Windows 服务器搭建的 iSCSI 存储为例：<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171635.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171639.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171644.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171648.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171651.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171654.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171659.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171704.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171709.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171735.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171738.png" alt="Img"><br><em>以上操作未成功，原因是 iSCSI 目标服务器的存储接口是 SATA，而非 SCIS 存储类型，无法建立连接。</em></p>
+<h2 id="VCSA虚机系统备份与还原"><a href="#VCSA虚机系统备份与还原" class="headerlink" title="VCSA虚机系统备份与还原"></a>VCSA 虚机系统备份与还原</h2><p>（备份目标：VM 虚拟平台外的其它服务器）<br>NFS 服务器做备份目标，端口 2049<br>备份<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171927.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171931.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171935.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171938.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171943.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513171947.png" alt="Img"></p>
+<h1 id="vSphere-高级功能应用阶段"><a href="#vSphere-高级功能应用阶段" class="headerlink" title="vSphere 高级功能应用阶段"></a>vSphere 高级功能应用阶段</h1><h2 id="vMotion（热迁移）"><a href="#vMotion（热迁移）" class="headerlink" title="vMotion（热迁移）"></a>vMotion（热迁移）</h2><p>先决条件：<br>分布式虚拟交换机<br>VMkernel 适配器网络配置（静态或动态 IP，具体视实际场景）<br>vMotion 服务已开启<br>网络可达<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172018.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172020.png" alt="Img"></p>
+<p><em>第一次测试热迁移虚拟机出现报错：</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172035.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172040.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172044.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172047.png" alt="Img"><br>解决方法：检查物理服务器 ESXI 主机上的网卡或者线路是否正常可用<br>开始迁移：<br>以计算与存储均迁移为例<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172101.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172104.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172107.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172110.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172113.png" alt="Img"></p>
+<p>完成！</p>
+<h2 id="VC集成域认证登录"><a href="#VC集成域认证登录" class="headerlink" title="VC集成域认证登录"></a>VC 集成域认证登录</h2><p>重点，如何去活动目录服务器（ldap AD）查找标识源名，    distinguishedName 标识名<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172130.png" alt="Img"><br>添加活动目录到 vCenter Server<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172219.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172223.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172226.png" alt="Img"><br>随时同步 LDAP 数据库信息（新建麻子，maz）<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172235.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172238.png" alt="Img"><br>找到对应的管理员组并将域内账户加入其中。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172246.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172249.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172253.png" alt="Img"></p>
+<h2 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172342.png" alt="Img"><br><em>检查 VMKernel 管理网络配置是否正常，以及对应的服务是否启用</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172353.png" alt="Img"><br>!!!!!<br>原因是集群上不存在 SAN 存储设备，比如:iSCSI、光纤通道存储等 SAN 存储<br>故此 FT，HA，DRS 等高级功能使用不了<br>!!!!</p>
+<h2 id="DRS-分布式资源调度"><a href="#DRS-分布式资源调度" class="headerlink" title="DRS(分布式资源调度)"></a>DRS (分布式资源调度)</h2><p>。。。。</p>
+<h2 id="FT（容错）"><a href="#FT（容错）" class="headerlink" title="FT（容错）"></a>FT（容错）</h2><p>注意：开启 FT，要求虚拟机不能开启热插拔<br>。。。。</p>
+<h2 id="VDP-备份恢复虚拟机"><a href="#VDP-备份恢复虚拟机" class="headerlink" title="VDP(备份恢复虚拟机)"></a>VDP (备份恢复虚拟机)</h2><p>先决条件：<br>提前下载好 VDP 的 OVF 模板至本地<br>注：提前做 VDP 的 DNS 域名解析（否则会报错，见下）<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172457.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172500.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172503.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172506.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172509.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172512.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172515.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172519.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172522.png" alt="Img"></p>
+<p>给 VDP 虚机按照 VM tools 工具，然后重启下<br>默认账号密码：root /changeme<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172532.png" alt="Img"><br><em>报错分析：未对 VDP 做 DNS 域名解析，因为部署 VDP 过程会使用到 DNS。</em><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172547.png" alt="Img"><br>重新部署 VDP 模板虚机<br>完后还是还是上面的报错，故此怀疑是本地 OVF 模板的问题可能，具体待定。。。。。</p>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><h2 id="主机USB与USB控制器区别"><a href="#主机USB与USB控制器区别" class="headerlink" title="主机USB与USB控制器区别"></a>主机 USB 与 USB 控制器区别</h2><p>注：虚拟机上添加 “主机 USB 设备” 前必须保证其所在的 ESXI 主机上插入了 USB 设备，否则提示 “无任何可用设备”<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172843.png" alt="Img"></p>
+<h2 id="上传镜像到-Vsphere中心失败，解决方法"><a href="#上传镜像到-Vsphere中心失败，解决方法" class="headerlink" title="上传镜像到 Vsphere中心失败，解决方法"></a>上传镜像到 Vsphere 中心失败，解决方法</h2><p><strong>换 360 浏览器</strong><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513172904.png" alt="Img"></p>
+<h2 id="Esxi主机内存扩容"><a href="#Esxi主机内存扩容" class="headerlink" title="Esxi主机内存扩容"></a>Esxi 主机内存扩容</h2><p>虚拟化平台：<br>三台 ESXI 主机 + 两台存储<br>一台戴尔服务器，两台联想服务器，两台联想存储，光纤 FC 通道连接</p>
+<p>准备步骤：<br>1，上面所有的虚拟机正常关机<br>2，访问将 VCSA 或 VC 所在的 ESXI 主机上，将 VCSA 或 VC 虚拟机关机（注意：请一定要在 ESXI 主机上 先将 VCSA 关机，然后再 ESXI 主机关机）<br>3，主机进入维护模式前，如果开启了  HA 和 DRS 高级功能  ，请务必将其停用后   。再将所有的 Esxi 主机进入维护模式，然后关机   （否则一主机进入维护模式后，其上的虚拟机将会 DRS 迁移到别的主机上，造成虚拟机资源集中化问题）<br>4，内存扩容完毕。（重点：请务必提前确保服务器上的网线，光纤等标记好端口位置，便以恢复原状）<br>5，服务器开机，esxi 开机正常并启动服务<br>6，服务各个 Esxi 主机，退出维护模式<br>7，给 VCSA 或 VC 虚拟机开机<br>8，访问 VCSA 或 VC  ，给虚拟机服务器逐个开机</p>
+<h2 id="域控在虚拟化中的注意点"><a href="#域控在虚拟化中的注意点" class="headerlink" title="域控在虚拟化中的注意点"></a>域控在虚拟化中的注意点</h2><p>1，公司所有业务服务器均为虚拟机上。其中域控服务器也是，然后公司奇安信行为管理  上启用了 客户端电脑  windows 集成认证（客户端加域）     来上网认证。  故此在 ESXI 主机关机及进入维护模式期间，域控是关机停服状态  。故此当客户端电脑域账号登录后无法正常上网！<br>解决方法：行为管理提前给客户端电脑网段加白名单。或请合理安排作业时间</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="VCSA关机和esxi进入维护模式顺序错误"><a href="#VCSA关机和esxi进入维护模式顺序错误" class="headerlink" title="VCSA关机和esxi进入维护模式顺序错误"></a>VCSA 关机和 esxi 进入维护模式顺序错误</h2><p>作业完成后虚拟机开机过程引导报错：<br>OA_DB 泛微 OA 数据库服务器虚拟机开机引导报错如下：<br>error: file /initramfs-3.10.0-1160.102.1.el7.x86_64.img’ not found.<br>/boot 系统启动文件丢失导致开机启动失败<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173138.png" alt="Img"><br>解决方法：<br><a href="https://blog.csdn.net/u011775882/article/details/115367352">https://blog.csdn.net/u011775882/article/details/115367352</a><br>适用于处理任何 /boot 目录下的文件丢失问题<br>{  故障现象</p>
+<p>主机启动失败，提示 error: file ‘/initramfs-3.10.0-957.el7.x86_64.img’ not found。如下图：<br>在这里插入图片描述<br>2. 处理思路</p>
+<p>光驱启动进入系统救援模式，确认 /boot 目录下 initramfs-3.10.0-957.el7.x86_64.img 文件是否存在。<br>如文件不存在，直接从步骤 8 开始执行.<br>如文件存在，则可能文件已经损坏。/boot 目录下创建 bak 子目录，mv 原文件至 bak 目录下。<br>挂载系统镜像文件（系统 iso 文件），进入软件包所处目录，通过 rpm 方式强制重装内核软件包。/boot 目录下任何文件丢失均可以使用该方法处理。<br>重装内核完成后，检查 /boot 目录下是否生成 initramfs-3.10.0-957.el7.x86_64.img。确认文件已生成，重启操作系统，故障解决。<br>略。。<br>3. 处理步骤</p>
+<p>1. 挂载 iso 镜像文件，重启主机，通过光驱启动。（如不熟悉该步骤，请自行查阅文档）<br>2. 进入系统安装界面，按上下键，选择 Troubleshooting 后回车。<br>在这里插入图片描述<br>3. 选择 Rescue a Centos system 回车<br>在这里插入图片描述</p>
+<p>4. 救援环境尝试挂载 linux 根文件系统到 /mnt/sysimage，选 1 回车，再回车。<br>在这里插入图片描述 5. 根据上图提示，执行 chroot /mnt/sysimage 命令，切换至根目录模式，确认 initramfs-3.10.0-957.el7.x86_64.img 文件是否存在。</p>
+<p>sh 4.2#chroot /mnt/sysimage<br>bash-4.2#cd /boot<br>bash-4.2#ls -l initramfs-3.10.0-957.el7.x86_64.img</p>
+<p>6. 如文件存在，需要先移动至 bak 目录。如文件不存在，跳过步骤 6.</p>
+<p>bash-4.2# cd /boot<br>bash-4.2#mkdir bak<br>bash-4.2#mv initramfs-3.10.0-957.el7.x86_64.img bak</p>
+<p>7. 执行 mount 命令，将光驱重新挂载至 /mnt 目录，然后切换至系统软件包所在目录，列出 kernel 相关软件包。<br>在这里插入图片描述 8. 执行 rpm 命令强制安装 kernel 软件包，此处注意–force 选项是必须的。</p>
+<p>在这里插入图片描述<br>9.kernel 软件包重装完成后，查看 /boot 目录下是否有新的 initramfs 文件生成。<br>在这里插入图片描述 10. 重启主机，操作系统恢复正常。</p>
+<p>在这里插入图片描述<br>本文描述的方法适用于处理任何 /boot 目录下的文件丢失问题  }</p>
+<h2 id="虚拟机的网络适配器即网卡类型区别"><a href="#虚拟机的网络适配器即网卡类型区别" class="headerlink" title="虚拟机的网络适配器即网卡类型区别"></a>虚拟机的网络适配器即网卡类型区别</h2><p><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173206.png" alt="Img"></p>
+<h2 id="VMware-Converte-官方P2V转换工具"><a href="#VMware-Converte-官方P2V转换工具" class="headerlink" title="VMware_Converte 官方P2V转换工具"></a>VMware_Converte 官方 P2V 转换工具</h2><p>官方工具：<a href="https://docs.vmware.com/en/vCenter-Converter-Standalone/index.html">https://docs.vmware.com/en/vCenter-Converter-Standalone/index.html</a></p>
+<h2 id="关于VC的许可证添加注意事项"><a href="#关于VC的许可证添加注意事项" class="headerlink" title="关于VC的许可证添加注意事项"></a>关于 VC 的许可证添加注意事项</h2><p>在部署完 VC 后请务必第一时间（正式添加 esxi 主机，集群前）就必须把默认的评估许可证替换下来。否则请断开移除所有主机，集群，然后按以下步骤重新操作。<br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173258.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173301.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173304.png" alt="Img"><br><img src="/./FILES/vSphere-Server%E7%AC%94%E8%AE%B0.md/img-20250513173309.png" alt="Img"></p>
+<h1 id="资源分享"><a href="#资源分享" class="headerlink" title="资源分享"></a>资源分享</h1><p>通过网盘分享的文件：ESXi and vCenter Server 文档<br>链接: <a href="https://pan.baidu.com/s/1FAFwt31UIDHwdgfRN3bheQ">https://pan.baidu.com/s/1FAFwt31UIDHwdgfRN3bheQ</a> 提取码: ewa5<br>通过网盘分享的文件：keygen (已破解).rar<br>链接: <a href="https://pan.baidu.com/s/1xn-UD2LtiRrHtqFmwhQ-JA">https://pan.baidu.com/s/1xn-UD2LtiRrHtqFmwhQ-JA</a> 提取码: i84i<br>通过网盘分享的文件：VMware-VCSA-all-7.0.3-22837322.iso<br>链接: <a href="https://pan.baidu.com/s/1Qpe94TN0CxrZFBs8AljeIQ">https://pan.baidu.com/s/1Qpe94TN0CxrZFBs8AljeIQ</a> 提取码: z1qs<br>通过网盘分享的文件：VMware-VMvisor-Installer-7.0U3n-21930508.x86_64.iso<br>链接: <a href="https://pan.baidu.com/s/1Zz5jHgCuSKq9R39TIMAROA">https://pan.baidu.com/s/1Zz5jHgCuSKq9R39TIMAROA</a> 提取码: unqw</p>
 ]]></content>
+      <categories>
+        <category>虚拟化</category>
+      </categories>
   </entry>
   <entry>
     <title>运维笔记</title>
