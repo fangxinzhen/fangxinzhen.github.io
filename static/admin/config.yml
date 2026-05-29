@@ -2,7 +2,8 @@ backend:
   name: github
   repo: fangxinzhen/fangxinzhen.github.io
   branch: main
-  auth_scope: repo
+  # 使用社区 OAuth 代理（无需自己部署）
+  base_url: https://auth-cms.netlify.app
 
 media_folder: "static/images"
 public_folder: "/images"
