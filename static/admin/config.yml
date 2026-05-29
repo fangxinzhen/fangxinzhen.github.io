@@ -2,8 +2,7 @@ backend:
   name: github
   repo: fangxinzhen/fangxinzhen.github.io
   branch: main
-  base_url: https://fangxinzhen.github.io
-  auth_endpoint: oauth
+  auth_scope: repo
 
 media_folder: "static/images"
 public_folder: "/images"
