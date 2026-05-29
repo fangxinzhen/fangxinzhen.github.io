@@ -1,0 +1,26 @@
+services:
+  blog:
+    build: .
+    container_name: hugo-blog-stack
+    restart: always
+    ports:
+      - "${HUGO_PORT}:80"
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${VOLUME_BLOG_CONTENT}:/site/content
+      - ${VOLUME_BLOG_STATIC}:/site/static
+      - ${VOLUME_BLOG_THEMES}:/site/themes
+      - ./hugo.yaml:/site/hugo.yaml:ro
+    networks:
+      - blog_bridge
+
+networks:
+  blog_bridge:
+    driver: bridge
+    name: ${NETWORK_NAME}
+
+volumes:
+  blog_content:
+  blog_static:
+  blog_themes:
